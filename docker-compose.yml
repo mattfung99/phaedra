@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  phaedra-client:
+    build:
+      context: ./phaedra-client
+      dockerfile: Dockerfile
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./phaedra-client:/phaedra-client
+    ports:
+      - 3000:3000
+    image: phaedra-client:client
+    container_name: phaedra-client
+    command: npm start
+
+  phaedra-server:
+    build:
+      context: ./phaedra-server
+      dockerfile: Dockerfile
+      target: base
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./phaedra-server/src:/home/node/app/src
+      - ./phaedra-server/nodemon.json:/home/node/app/nodemon.json
+    ports:
+      - 8080:8080
+    image: phaedra-server:server
+    container_name: phaedra-server
+    command: npm run dev
