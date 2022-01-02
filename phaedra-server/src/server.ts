@@ -5,6 +5,8 @@ import logging from './config/logging';
 import config from './config/config';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
+import initializeRouter from 'routes/apiv1/v1.route';
+import './middlewares/passportStrategy.mw';
 
 export const createServer = () => {
   require('dotenv').config();
@@ -19,7 +21,7 @@ export const sendFirstRequest = (router: Application) => {
 };
 
 export const enableCors = (router: Application) => {
-  const allowedOrigins = config.server.corsOriginUrl;
+  const allowedOrigins = config?.server?.corsOriginUrl;
   logging.debug('origins', 'ALLOWED ORIGINS IS', allowedOrigins);
   const options: cors.CorsOptions = {
     origin: allowedOrigins,
@@ -55,9 +57,9 @@ export const enableLogging = (router: Application, namespace: string) => {
   router.use(passport.initialize());
 };
 
-// export const enableRoutes = (router: Application) => {
-//   router.use(initializeRouter);
-// };
+export const enableRoutes = (router: Application) => {
+  router.use(initializeRouter);
+};
 
 export const enableErrorHandling = (router: Application) => {
   router.use((req, res, next) => {
@@ -70,5 +72,5 @@ export const enableErrorHandling = (router: Application) => {
 
 export const enableServerListening = (router: Application, namespace: string) => {
   const httpServer = http.createServer(router);
-  httpServer.listen(config.server.port, () => logging.info(namespace, `Server running on ${config.server.hostname}:${config.server.port}`));
+  httpServer.listen(config.server?.port, () => logging.info(namespace, `Server running on ${config.server?.hostname}:${config.server?.port}`));
 };
