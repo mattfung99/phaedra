@@ -6,6 +6,7 @@ dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 type Server = {
   hostname: string | undefined;
   port: number;
+  testPort: number;
   corsOriginUrl: string | undefined;
 };
 
@@ -29,11 +30,13 @@ type Config = {
 
 const SERVER_HOSTNAME: string | undefined = process.env.HOST_NAME;
 const SERVER_PORT: number | undefined = parseInt(<string>process.env.SERVER_PORT, 10);
+const SERVER_TEST_PORT: number | undefined = parseInt(<string>process.env.SERVER_TEST_PORT, 10);
 const CORS_ORIGIN_URL: string | undefined = process.env.CORS_ORIGIN_URL;
 
 const SERVER: Server = {
   hostname: SERVER_HOSTNAME,
   port: SERVER_PORT,
+  testPort: SERVER_TEST_PORT,
   corsOriginUrl: CORS_ORIGIN_URL
 };
 
