@@ -20,6 +20,8 @@ services:
       context: ./phaedra-server
       dockerfile: Dockerfile
       target: base
+    depends_on:
+      - phaedra-database
     stdin_open: true
     tty: true
     volumes:
@@ -30,3 +32,20 @@ services:
     image: phaedra-server:server
     container_name: phaedra-server
     command: npm run dev
+
+  phaedra-database:
+    build:
+      context: ./phaedra-database
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_DATABASE=phaedradb
+      - MYSQL_USER=PHAEDRA
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
+      - TZ=America/Vancouver
+    volumes:
+      - ./phaedra-database:/phaedra-database
+    ports:
+      - 3306:3306
+    image: mysql:8.0
+    container_name: phaedra-database
