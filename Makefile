@@ -1,5 +1,4 @@
 # Development
-
 build:
 	docker-compose build
 
@@ -18,13 +17,20 @@ seed:
 stop:
 	docker-compose stop
 
+test:
+	docker exec phaedra-server npm test
+
 u:
 	docker-compose up
 
 up:
 	docker-compose up -d
+
+up-proj:
+	docker-compose up -d
+	docker exec phaedra-server node_modules/.bin/knex migrate:latest
+	docker exec phaedra-server node_modules/.bin/knex seed:run
 	
 # Production
-
 up-prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
