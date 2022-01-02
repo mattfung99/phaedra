@@ -18,9 +18,7 @@ stop:
 	docker-compose stop
 
 test:
-	docker exec phaedra-server node_modules/.bin/knex seed:run
 	docker exec phaedra-server npm test
-	docker exec phaedra-server node_modules/.bin/knex seed:run
 
 u:
 	docker-compose up
