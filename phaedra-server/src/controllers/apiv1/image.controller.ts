@@ -41,10 +41,13 @@ const addImage = async (req: any, res: Response, next: NextFunction) => {
 const deleteImageById = async (req: any, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE_IMAGE, `DELETING A ${TABLE_IMAGE.toUpperCase()} BY ID`);
   const imageId: number = +req.params.id;
+  const FLAG_TESTING: boolean = JSON.parse(req.body.FLAG_TESTING);
+  console.log(FLAG_TESTING);
   try {
     const retrievedImageById: Image = await Knex.select('filepath').from(TABLE_IMAGE).where('id', imageId).first();
     logging.info(NAMESPACE_IMAGE, 'DELETED FILE IS ', retrievedImageById);
-    deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
+    await Knex(TABLE_IMAGE).del().where('id', imageId);
+    if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
     logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);
     res.sendStatus(204);
   } catch (error: any) {

@@ -11,6 +11,7 @@ let testApp: Application;
 let httpServer: http.Server;
 let agent: any;
 
+// Test 1: Login as an administrator
 describe('POST /api/v1/auth/login', () => {
   before((done) => {
     testApp = setupApp();
@@ -21,13 +22,6 @@ describe('POST /api/v1/auth/login', () => {
   after(() => {
     httpServer.close();
   });
-  beforeEach(() =>
-    Knex.migrate
-      .rollback()
-      .then(() => Knex.migrate.latest())
-      .then(() => Knex.seed.run())
-  );
-  afterEach(() => Knex.migrate.rollback());
   it('should allow administrator to pass through', (done) => {
     // agent.get('/api/v1/user').end((err: any, res: any) => {
     //   expect(err).to.be.null;
