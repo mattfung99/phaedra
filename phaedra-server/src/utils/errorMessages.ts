@@ -17,5 +17,7 @@ const inputError = (url: string) => {
 const imageNegativeOrNanInputError = negativeOrNanInputError('/api/v1/image/:id');
 const imageDNEError = dneError('image', 'does not exist');
 const imageMimetypeError = invalidExtension('image', 'png, jpg, jpeg');
+const blogPostNegativeOrNanInputError = negativeOrNanInputError('/api/v1/blog-post/:id');
+const blogPostDNEError = dneError('blog_post', 'does not exist');
 
-export { imageNegativeOrNanInputError, imageDNEError, imageMimetypeError };
+export { imageNegativeOrNanInputError, imageDNEError, imageMimetypeError, blogPostNegativeOrNanInputError, blogPostDNEError };
