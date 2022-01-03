@@ -12,7 +12,7 @@
           "name": "Authentication",
           "item": [
             {
-              "name": "LOGIN",
+              "name": "Login a user",
               "request": {
                 "method": "POST",
                 "header": [],
@@ -35,7 +35,7 @@
               "response": []
             },
             {
-              "name": "AUTHENTICATE",
+              "name": "Authenticate a user",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -49,7 +49,7 @@
               "response": []
             },
             {
-              "name": "LOGOUT",
+              "name": "Logout a user",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -58,6 +58,84 @@
                   "host": ["localhost"],
                   "port": "8080",
                   "path": ["api", "v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Image",
+          "item": [
+            {
+              "name": "Add an image",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:8080/api/v1/image",
+                  "host": ["localhost"],
+                  "port": "8080",
+                  "path": ["api", "v1", "image"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get an image by id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/v1/image/:id",
+                  "host": ["localhost"],
+                  "port": "8080",
+                  "path": ["api", "v1", "image", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Remove an image by id",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"FLAG_TESTING\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/api/v1/image/:id",
+                  "host": ["localhost"],
+                  "port": "8080",
+                  "path": ["api", "v1", "image", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
                 }
               },
               "response": []

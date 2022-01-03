@@ -2,15 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import logging from '../../config/logging';
 import authConfig from '../../utils/authHelper';
 import userAuth from './templates/getUser.controller';
+import { NAMESPACE_AUTH } from 'db/models/tables.model';
 import { authUserNotFound, authInvalidCredentials, authServerError, returnLoginAuthenticationStatus, returnAuthenticationStatus } from 'utils/authMessages';
-
-const NAMESPACE = 'Authentication Control';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body;
   try {
     const user: any = await userAuth.findUser('user.username', username);
-    logging.info(NAMESPACE, 'RETRIEVED USER FROM DB', user);
+    logging.info(NAMESPACE_AUTH, 'RETRIEVED USER FROM DB', user);
     if (!user) {
       res.status(401).send(authUserNotFound);
       return;
@@ -28,7 +27,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(401).send(authInvalidCredentials);
   } catch (error: any) {
-    logging.error(NAMESPACE, error.message, error);
+    logging.error(NAMESPACE_AUTH, error.message, error);
     res.status(500).send(authServerError);
   }
 };
