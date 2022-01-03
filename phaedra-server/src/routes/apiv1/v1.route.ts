@@ -3,12 +3,14 @@ import { Router } from 'express';
 // import userPrivateRoutes from './userPrivate.route';
 import authenticationRoutes from './auth.route';
 import imageRoutes from './image.route';
+import blogPostRoutes from './blogPost.route';
 import passport from 'passport';
 
 const authRouter: Router = Router();
 authRouter.use('/api/v1/auth', authenticationRoutes);
 
 const publicRouter: Router = Router();
+publicRouter.use('/api/v1/blog-post', blogPostRoutes);
 // publicRouter.use('/api/v1/user', userPublicRoutes);
 
 const privateRouter: Router = Router();
