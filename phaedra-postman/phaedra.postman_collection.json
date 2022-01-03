@@ -82,7 +82,7 @@
               "response": []
             },
             {
-              "name": "Get blog post by id",
+              "name": "Get a blog post by id",
               "request": {
                 "method": "GET",
                 "header": [],

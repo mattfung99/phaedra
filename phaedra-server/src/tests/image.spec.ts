@@ -11,7 +11,7 @@ let testApp: Application;
 let httpServer: http.Server;
 let agent: any;
 
-// Test 1: Add a photo
+// Test 1: Add a image
 describe('POST /api/v1/image', () => {
   before((done) => {
     testApp = setupApp();
@@ -38,7 +38,7 @@ describe('POST /api/v1/image', () => {
   });
 });
 
-// Test 2: Get an image
+// Test 2: Get an image by id
 describe('GET /api/v1/image/:id', () => {
   before((done) => {
     testApp = setupApp();
