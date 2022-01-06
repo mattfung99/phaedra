@@ -1,0 +1,14 @@
+.post-button-margin {
+  margin-left: 5px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #000000;
+  text-align: center;
+  font-size: 15px;
+}

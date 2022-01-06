@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../../controllers/apiv1/image.controller';
+import controller from '../../../controllers/apiv1/image.controller';
 import { registerImageDelete } from 'db/schema/image.schema';
 import { validateInput } from 'middlewares/inputSanitzation';
 import { validateParamId, validateParamProperties } from 'middlewares/paramsValidation.mw';

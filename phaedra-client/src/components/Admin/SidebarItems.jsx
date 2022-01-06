@@ -1,6 +1,7 @@
 import * as MdIcons from 'react-icons/md';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
+import * as IoIcons5 from 'react-icons/io5';
 
 export const SidebarItems = [
   {
@@ -16,7 +17,13 @@ export const SidebarItems = [
     cName: 'side-text'
   },
   {
-    title: 'Posts',
+    title: 'New Post',
+    path: '/admin/new',
+    icon: <IoIcons5.IoCreateOutline />,
+    cName: 'side-text'
+  },
+  {
+    title: 'Manage Posts',
     path: '/admin/posts',
     icon: <IoIcons.IoIosPaper />,
     cName: 'side-text'

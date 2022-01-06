@@ -8,8 +8,9 @@ import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SidebarItems } from './SidebarItems';
 import { IconContext } from 'react-icons';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Row, Col } from 'react-bootstrap';
 import { SideBar } from '../../models/sidebar';
+import { currYear } from '../../utils/timezone';
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -43,7 +44,7 @@ const Sidebar = () => {
                 <li key={index} className={item.cName}>
                   <Link to={item.path}>
                     {item.icon}
-                    <span>{item.title}</span>
+                    <span className="sidebar-span">{item.title}</span>
                   </Link>
                 </li>
               );
@@ -52,6 +53,11 @@ const Sidebar = () => {
               <Button variant="outline-danger" onClick={onClickLogoutHandler}>
                 Logout
               </Button>
+            </Container>
+            <Container className="copyright-label">
+              <Row>
+                <Col className="text-center py-3">Copyright &copy; Phaedra {currYear}</Col>
+              </Row>
             </Container>
           </ul>
         </nav>

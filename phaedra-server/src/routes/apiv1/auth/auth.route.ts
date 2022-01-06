@@ -1,5 +1,5 @@
 import express from 'express';
-import authenticationController from '../../controllers/apiv1/auth.controller';
+import authenticationController from '../../../controllers/apiv1/auth.controller';
 import passport from 'passport';
 
 const router = express.Router();

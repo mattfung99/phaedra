@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import Sidebar from '../../components/Admin/Sidebar';
 
-const ViewPosts = () => {
+const NewPost = () => {
   useEffect(() => {
-    document.title = 'Posts';
+    document.title = 'New Post';
   }, []);
 
   return (
     <div>
       <Sidebar />
-      <h1>View Posts</h1>
+      <h1>New Post</h1>
     </div>
   );
 };
 
-export default ViewPosts;
+export default NewPost;
