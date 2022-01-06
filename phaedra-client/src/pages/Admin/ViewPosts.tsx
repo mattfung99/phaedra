@@ -1,9 +1,15 @@
-import React from 'react';
+import { useEffect } from 'react';
+import Sidebar from '../../components/Admin/Sidebar';
 
 const ViewPosts = () => {
+  useEffect(() => {
+    document.title = 'Posts';
+  }, []);
+
   return (
     <div>
-      <h1 style={{ marginTop: '2em' }}>View Posts</h1>
+      <Sidebar />
+      <h1>View Posts</h1>
     </div>
   );
 };

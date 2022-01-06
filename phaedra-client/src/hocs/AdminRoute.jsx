@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { UserContext } from '../hooks/UserContext';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const AdminRoute = ({ component: Component, ...rest }) => {
   const userContext = useContext(UserContext);
   console.log(userContext.isAuthenticated);
   return (
@@ -18,4 +18,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+export default AdminRoute;
