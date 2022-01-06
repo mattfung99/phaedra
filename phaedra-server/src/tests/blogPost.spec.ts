@@ -57,7 +57,38 @@ describe('GET /api/v1/blog-post', () => {
   });
 });
 
-// Test 2: GET a blog post by id
+// Test 2: GET all admin blog posts
+describe('GET /api/v1/admin-blog-post', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should successfully get all admin blog posts', (done) => {
+    agent.get('/api/v1/admin-blog-post').end((err: any, res: any) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(200);
+      expect(res.body).to.be.an('array');
+      res.body.forEach((item: any) => {
+        expect(item).to.be.an('object');
+        expect(item).to.have.deep.property('id');
+        expect(item).to.have.deep.property('title');
+        expect(item).to.have.deep.property('author');
+        expect(item).to.have.deep.property('created_at');
+        expect(item).to.have.deep.property('updated_at');
+        expect(item).to.have.deep.property('preview');
+        expect(item).to.have.deep.property('is_draft');
+      });
+      done();
+    });
+  });
+});
+
+// Test 3: GET a blog post by id
 describe('GET /api/v1/blog-post/:id', () => {
   before((done) => {
     testApp = setupApp();

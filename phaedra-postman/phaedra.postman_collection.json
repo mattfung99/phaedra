@@ -82,6 +82,20 @@
               "response": []
             },
             {
+              "name": "Get all admin blog posts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/v1/admin-blog-post",
+                  "host": ["localhost"],
+                  "port": "8080",
+                  "path": ["api", "v1", "admin-blog-post"]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Get a blog post by id",
               "request": {
                 "method": "GET",

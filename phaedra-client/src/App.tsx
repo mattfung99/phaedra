@@ -11,7 +11,8 @@ import Login from './pages/Public/Login';
 import Error404 from './pages/Public/Error404';
 import Dashboard from './pages/Admin/Dashboard';
 import Account from './pages/Admin/Account';
-import ViewPosts from './pages/Admin/ViewPosts';
+import NewPost from './pages/Admin/NewPost';
+import ManagePosts from './pages/Admin/ManagePosts';
 import PublicRoute from './hocs/PublicRoute';
 import AdminRoute from './hocs/AdminRoute';
 
@@ -28,7 +29,8 @@ const App = () => {
           <PublicRoute exact path="/login" component={Login} />
           <AdminRoute exact path="/admin" component={Dashboard} />
           <AdminRoute exact path="/admin/account" component={Account} />
-          <AdminRoute exact path="/admin/posts" component={ViewPosts} />
+          <AdminRoute exact path="/admin/new" component={NewPost} />
+          <AdminRoute exact path="/admin/posts" component={ManagePosts} />
           <Route component={Error404} />
         </Switch>
       </Router>

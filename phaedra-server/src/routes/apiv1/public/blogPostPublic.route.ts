@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../../controllers/apiv1/blogPost.controller';
+import controller from '../../../controllers/apiv1/blogPost.controller';
 import { validateParamId } from 'middlewares/paramsValidation.mw';
 import { TABLE_BLOG_POST } from 'db/models/tables.model';
 import { blogPostNegativeOrNanInputError, blogPostDNEError } from 'utils/errorMessages';

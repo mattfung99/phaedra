@@ -4,11 +4,11 @@ interface Props {
   children: React.ReactNode;
 }
 
-const LoginContainer = ({ children }: Props) => {
+const CenteredContainer = ({ children }: Props) => {
   return (
     <Container className="py-3">
       <Row className="justify-content-md-center">
-        <Col xs={12} md={6}>
+        <Col xs={12} md={10}>
           {children}
         </Col>
       </Row>
@@ -16,4 +16,4 @@ const LoginContainer = ({ children }: Props) => {
   );
 };
 
-export default LoginContainer;
+export default CenteredContainer;

@@ -1,8 +1,20 @@
+.copyright-label {
+  align-items: center;
+  bottom: 0;
+  color: white;
+  padding-bottom: 5px;
+  position: fixed;
+  text-align: center;
+  width: 250px;
+}
+
 .logout-button {
   align-items: center;
-  display: flex;
-  /* height: 80vh; */
-  justify-content: center;
+  bottom: 0;
+  padding-bottom: 50px;
+  position: fixed;
+  text-align: center;
+  width: 250px;
 }
 
 .menu-bars {
@@ -66,6 +78,10 @@
   justify-content: start;
 }
 
+.sidebar-span {
+  margin-left: 16px;
+}
+
 .sidebar-title {
   color: white;
   padding-left: 10px;
@@ -79,8 +95,4 @@
   height: 50px;
   justify-content: start;
   width: 100%;
-}
-
-span {
-  margin-left: 16px;
 }

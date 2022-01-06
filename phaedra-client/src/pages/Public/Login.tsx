@@ -6,7 +6,7 @@ import { UserContext } from '../../hooks/UserContext';
 import { toast } from 'react-toastify';
 import authenticationService from '../../services/authenticationService';
 import { UserCredentials } from '../../models/user';
-import LoginContainer from '../../components/Public/LoginContainer';
+import CenteredContainer from '../../components/Shared/CenteredContainer';
 import Header from '../../components/Public/Header';
 import Footer from '../../components/Public/Footer';
 
@@ -48,7 +48,7 @@ const Login = () => {
   };
 
   return (
-    <LoginContainer>
+    <CenteredContainer>
       <Header />
       <Container className="public">
         <Col xs>
@@ -68,7 +68,7 @@ const Login = () => {
         </Col>
       </Container>
       <Footer />
-    </LoginContainer>
+    </CenteredContainer>
   );
 };
 

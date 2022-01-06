@@ -4,7 +4,6 @@ import { UserContext } from '../hooks/UserContext';
 
 const AdminRoute = ({ component: Component, ...rest }) => {
   const userContext = useContext(UserContext);
-  console.log(userContext.isAuthenticated);
   return (
     <Route
       {...rest}
