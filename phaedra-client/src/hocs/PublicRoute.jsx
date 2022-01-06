@@ -11,7 +11,7 @@ const PublicRoute = ({ component: Component, ...rest }) => {
         if (!userContext.isAuthenticated) {
           return <Component {...props}></Component>;
         }
-        return <Redirect to={{ pathname: '/admin/account', state: { from: props.location } }} />;
+        return <Redirect to={{ pathname: '/admin', state: { from: props.location } }} />;
       }}
     />
   );

@@ -24,7 +24,7 @@ const Login = () => {
     if (isAuthenticated) {
       userContext.setUser(data.user);
       userContext.setIsAuthenticated(data.isAuthenticated);
-      history.push('/admin/account');
+      history.push('/admin');
       toast.success(`Successfully logged in as ${data.user.username}!`);
     } else {
       toast.error('Invalid login credentials!');

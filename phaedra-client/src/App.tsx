@@ -9,10 +9,11 @@ import Blog from './pages/Public/Blog';
 import Contact from './pages/Public/Contact';
 import Login from './pages/Public/Login';
 import Error404 from './pages/Public/Error404';
+import Dashboard from './pages/Admin/Dashboard';
 import Account from './pages/Admin/Account';
 import ViewPosts from './pages/Admin/ViewPosts';
 import PublicRoute from './hocs/PublicRoute';
-import PrivateRoute from './hocs/PrivateRoute';
+import AdminRoute from './hocs/AdminRoute';
 
 const App = () => {
   return (
@@ -25,9 +26,10 @@ const App = () => {
           <PublicRoute exact path="/blog" component={Blog} />
           <PublicRoute exact path="/contact" component={Contact} />
           <PublicRoute exact path="/login" component={Login} />
-          <PrivateRoute exact path="/admin/account" component={Account} />
-          <PrivateRoute exact path="/posts" component={ViewPosts} />
-          {/* <Route component={Error404} /> */}
+          <AdminRoute exact path="/admin" component={Dashboard} />
+          <AdminRoute exact path="/admin/account" component={Account} />
+          <AdminRoute exact path="/admin/posts" component={ViewPosts} />
+          <Route component={Error404} />
         </Switch>
       </Router>
     </div>

@@ -1,5 +1,5 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import { currYear } from '../../Utils/timezone';
+import { currYear } from '../../utils/timezone';
 
 const Footer = () => {
   return (

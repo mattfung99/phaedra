@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import Sidebar from '../../components/Admin/Sidebar';
 
-const Account = () => {
+const Dashboard = () => {
   useEffect(() => {
-    document.title = 'Account';
+    document.title = 'Dashboard';
   }, []);
 
   return (
     <div>
       <Sidebar />
-      <h1>Account Here</h1>
+      <h1>Dashboard</h1>
     </div>
   );
 };
 
-export default Account;
+export default Dashboard;
