@@ -41,12 +41,12 @@ export interface BlogPostInput {
   image_caption: string;
   preview: string;
   content: string;
-  is_draft: boolean;
+  is_draft: number;
   image_id: number;
   user_id: number;
 }
 
-export const modifyBlogPost = (values: BlogNewPost, editorContent: string, isDraft: boolean, imageId: number, userId: number): BlogPostInput => {
+export const modifyBlogPost = (values: BlogNewPost, editorContent: string, isDraft: number, imageId: number, userId: number): BlogPostInput => {
   return {
     title: values.title,
     image_caption: values.imageCaption,
