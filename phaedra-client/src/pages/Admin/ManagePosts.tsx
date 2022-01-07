@@ -9,7 +9,7 @@ import Pagination from '../../components/Shared/Pagination';
 import { BlogPostAdminList } from '../../models/blogpost';
 
 const ManagePosts = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<BlogPostAdminList[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(5);
   const lastPostIndex = currentPage * postsPerPage;

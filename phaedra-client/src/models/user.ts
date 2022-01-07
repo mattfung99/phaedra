@@ -9,3 +9,10 @@ export interface UserCredentials {
   username: string;
   password: string;
 }
+
+export const createUserCredentialsObject = (values: UserCredentials): UserCredentials => {
+  return {
+    username: values.username,
+    password: values.password
+  };
+};

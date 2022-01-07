@@ -1,0 +1,18 @@
+.editor-class {
+  /* background-color:lightgray; */
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+.publish-button {
+  margin-left: 10px;
+}
+
+.toolbar-class {
+  border: 1px solid #ccc;
+}
+
+.wrapper-class {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
