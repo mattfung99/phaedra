@@ -5,7 +5,6 @@ export const up = async (knex: Knex): Promise<void> => {
     table.increments().primary();
     table.string('title').notNullable();
     table.string('author').notNullable();
-    table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.text('image_caption').notNullable();
     table.text('preview').notNullable();

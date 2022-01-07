@@ -2,7 +2,6 @@ export interface BlogPost {
   id: number;
   title: string;
   author: string;
-  created_at: string;
   updated_at: string;
   image_caption: string;
   preview: string;
@@ -16,7 +15,6 @@ export interface BlogPostAdminList {
   id: number;
   title: string;
   author: string;
-  created_at: string;
   updated_at: string;
   preview: string;
   is_draft: boolean;
@@ -26,7 +24,6 @@ export interface BlogPostList {
   id: number;
   title: string;
   author: string;
-  created_at: string;
   updated_at: string;
   image_caption: string;
   preview: string;

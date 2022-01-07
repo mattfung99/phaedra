@@ -40,7 +40,6 @@ describe('GET /api/v1/blog-post', () => {
         expect(item).to.have.deep.property('id');
         expect(item).to.have.deep.property('title');
         expect(item).to.have.deep.property('author');
-        expect(item).to.have.deep.property('created_at');
         expect(item).to.have.deep.property('updated_at');
         expect(item).to.have.deep.property('image_caption');
         expect(item).to.have.deep.property('preview');
@@ -78,7 +77,6 @@ describe('GET /api/v1/admin-blog-post', () => {
         expect(item).to.have.deep.property('id');
         expect(item).to.have.deep.property('title');
         expect(item).to.have.deep.property('author');
-        expect(item).to.have.deep.property('created_at');
         expect(item).to.have.deep.property('updated_at');
         expect(item).to.have.deep.property('preview');
         expect(item).to.have.deep.property('is_draft');
@@ -131,7 +129,6 @@ describe('GET /api/v1/blog-post/:id', () => {
       expect(res.body).to.have.deep.property('id');
       expect(res.body).to.have.deep.property('title');
       expect(res.body).to.have.deep.property('author');
-      expect(res.body).to.have.deep.property('created_at');
       expect(res.body).to.have.deep.property('updated_at');
       expect(res.body).to.have.deep.property('image_caption');
       expect(res.body).to.have.deep.property('preview');
