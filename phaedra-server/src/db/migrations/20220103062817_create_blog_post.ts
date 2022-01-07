@@ -9,7 +9,7 @@ export const up = async (knex: Knex): Promise<void> => {
     table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.text('image_caption').notNullable();
     table.text('preview').notNullable();
-    table.text('content', 'mediumtext');
+    table.text('content', 'mediumtext').notNullable();
     table.boolean('is_draft').notNullable();
     table.integer('image_id').unsigned().notNullable().references('id').inTable('image');
     table.integer('user_id').unsigned().notNullable().references('id').inTable('user');
