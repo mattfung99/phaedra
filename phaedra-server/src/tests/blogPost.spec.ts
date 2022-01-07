@@ -18,7 +18,7 @@ const image_captions = ['Blog photo of the first post here!', 'Blog photo of the
 const previews = ['This is a preview of the first post', 'This is a preview of the third post'];
 const user_ids = [1, 2];
 
-// Test 1: GET all blog posts
+// Test 1: Get all blog posts
 describe('GET /api/v1/blog-post', () => {
   let id = 2;
   before((done) => {
@@ -56,7 +56,7 @@ describe('GET /api/v1/blog-post', () => {
   });
 });
 
-// Test 2: GET all admin blog posts
+// Test 2: Get all admin blog posts
 describe('GET /api/v1/admin-blog-post', () => {
   before((done) => {
     testApp = setupApp();
@@ -86,7 +86,7 @@ describe('GET /api/v1/admin-blog-post', () => {
   });
 });
 
-// Test 3: GET a blog post by id
+// Test 3: Get a blog post by id
 describe('GET /api/v1/blog-post/:id', () => {
   before((done) => {
     testApp = setupApp();
@@ -147,5 +147,149 @@ describe('GET /api/v1/blog-post/:id', () => {
       expect(res.body.user_id).to.deep.equal(user_ids[0]);
       done();
     });
+  });
+});
+
+// Test 4: Add a published blog post
+describe('POST /api/v1/admin-blog-post/publish', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should add a published blog post by id unsuccessfully', (done) => {
+    agent
+      .post('/api/v1/admin-blog-post/publish')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Test Post',
+        image_caption: 'A very cool image',
+        preview: 'This is a test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('errors');
+        done();
+      });
+  });
+  it('should add a published blog post by id successfully', (done) => {
+    agent
+      .post('/api/v1/admin-blog-post/publish')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Test Post',
+        image_caption: 'A very cool image',
+        preview: 'This is a test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: 1
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('id');
+        expect(res.body).to.have.deep.property('title');
+        expect(res.body).to.have.deep.property('author');
+        expect(res.body).to.have.deep.property('updated_at');
+        expect(res.body).to.have.deep.property('image_caption');
+        expect(res.body).to.have.deep.property('preview');
+        expect(res.body).to.have.deep.property('content');
+        expect(res.body).to.have.deep.property('is_draft');
+        expect(res.body).to.have.deep.property('image_id');
+        expect(res.body).to.have.deep.property('user_id');
+        expect(res.body.title).to.deep.equal('Test Post');
+        expect(res.body.author).to.deep.equal('John Doe');
+        expect(res.body.image_caption).to.deep.equal('A very cool image');
+        expect(res.body.preview).to.deep.equal('This is a test post...');
+        expect(res.body.content).to.deep.equal('');
+        expect(res.body.is_draft).to.deep.equal(0);
+        expect(res.body.image_id).to.deep.equal(1);
+        expect(res.body.user_id).to.deep.equal(1);
+        done();
+      });
+  });
+});
+
+// Test 5: Add a draft blog post
+describe('POST /api/v1/admin-blog-post/draft', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should add a draft blog post by id unsuccessfully', (done) => {
+    agent
+      .post('/api/v1/admin-blog-post/draft')
+      .set('content-type', 'application/json')
+      .send({
+        title: '',
+        image_caption: '',
+        preview: '',
+        content: '',
+        is_draft: 1,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('errors');
+        done();
+      });
+  });
+  it('should add a draft blog post by id successfully', (done) => {
+    agent
+      .post('/api/v1/admin-blog-post/draft')
+      .set('content-type', 'application/json')
+      .send({
+        title: '',
+        image_caption: '',
+        preview: '',
+        content: '',
+        is_draft: 1,
+        image_id: 1,
+        user_id: 1
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('id');
+        expect(res.body).to.have.deep.property('title');
+        expect(res.body).to.have.deep.property('author');
+        expect(res.body).to.have.deep.property('updated_at');
+        expect(res.body).to.have.deep.property('image_caption');
+        expect(res.body).to.have.deep.property('preview');
+        expect(res.body).to.have.deep.property('content');
+        expect(res.body).to.have.deep.property('is_draft');
+        expect(res.body).to.have.deep.property('image_id');
+        expect(res.body).to.have.deep.property('user_id');
+        expect(res.body.title).to.deep.equal('');
+        expect(res.body.author).to.deep.equal('John Doe');
+        expect(res.body.image_caption).to.deep.equal('');
+        expect(res.body.preview).to.deep.equal('');
+        expect(res.body.content).to.deep.equal('');
+        expect(res.body.is_draft).to.deep.equal(1);
+        expect(res.body.image_id).to.deep.equal(1);
+        expect(res.body.user_id).to.deep.equal(1);
+        done();
+      });
   });
 });
