@@ -119,6 +119,14 @@ describe('GET /api/v1/blog-post/:id', () => {
       done();
     });
   });
+  it('should return error code 404 for blog post that is a draft', (done) => {
+    agent.get('/api/v1/blog-post/2').end((err: any, res: any) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(404);
+      expect(res.text).to.deep.equal(JSON.stringify(blogPostDNEError));
+      done();
+    });
+  });
   it('should get a blog post by id successfully', (done) => {
     agent.get('/api/v1/blog-post/1').end((err: any, res: any) => {
       expect(err).to.be.null;
