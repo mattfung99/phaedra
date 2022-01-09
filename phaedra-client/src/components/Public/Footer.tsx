@@ -3,6 +3,7 @@ import { currYear } from '../../utils/timezone';
 
 const Footer = () => {
   return (
+    // <footer className="fixed-bottom">
     <footer>
       <Container>
         <Row>

@@ -25,7 +25,6 @@ export interface BlogPostList {
   title: string;
   author: string;
   updated_at: string;
-  image_caption: string;
   preview: string;
   image_id: number;
 }

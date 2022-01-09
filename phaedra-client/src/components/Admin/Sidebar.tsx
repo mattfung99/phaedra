@@ -13,7 +13,7 @@ import { SideBar } from '../../models/sidebar';
 import { currYear } from '../../utils/timezone';
 
 const Sidebar = () => {
-  const [sidebar, setSidebar] = useState(false);
+  const [sidebar, setSidebar] = useState<boolean>(false);
   const showSidebar = () => setSidebar(!sidebar);
   let history = useHistory();
   const userContext = useContext(UserContext);

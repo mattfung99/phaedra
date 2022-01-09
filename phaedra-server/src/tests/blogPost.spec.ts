@@ -41,13 +41,11 @@ describe('GET /api/v1/blog-post', () => {
         expect(item).to.have.deep.property('title');
         expect(item).to.have.deep.property('author');
         expect(item).to.have.deep.property('updated_at');
-        expect(item).to.have.deep.property('image_caption');
         expect(item).to.have.deep.property('preview');
         expect(item).to.have.deep.property('image_id');
         expect(item.id).to.deep.equal(ids[--id]);
         expect(item.title).to.deep.equal(titles[id]);
         expect(item.author).to.deep.equal(authors[id]);
-        expect(item.image_caption).to.deep.equal(image_captions[id]);
         expect(item.preview).to.deep.equal(previews[id]);
         expect(item.image_id).to.deep.equal(ids[id]);
       });

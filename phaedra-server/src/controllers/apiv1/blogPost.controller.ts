@@ -8,7 +8,7 @@ import { createItem } from './templates/createTemplate.controller';
 import { AuthorName } from 'db/models/userInfo.model';
 
 const queryAllBlogPostsByDesc = () => {
-  return Knex.select('id', 'title', 'author', 'updated_at', 'image_caption', 'preview', 'image_id').from(TABLE_BLOG_POST).where('is_draft', false).orderBy('updated_at', 'desc').orderBy('id', 'desc');
+  return Knex.select('id', 'title', 'author', 'updated_at', 'preview', 'image_id').from(TABLE_BLOG_POST).where('is_draft', false).orderBy('updated_at', 'desc').orderBy('id', 'desc');
 };
 
 const queryAllAdminBlogPostsByDesc = () => {

@@ -1,4 +1,4 @@
-import CenteredContainer from './CenteredContainer';
+import { Container } from 'react-bootstrap';
 
 interface Props {
   postsPerPage: number;
@@ -13,7 +13,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }: Props) => {
   }
 
   return (
-    <CenteredContainer>
+    <Container>
       <ul className="pagination justify-content-md-center">
         {pageNumbers.map((number) => (
           <li key={number} className="page-item">
@@ -23,7 +23,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }: Props) => {
           </li>
         ))}
       </ul>
-    </CenteredContainer>
+    </Container>
   );
 };
 
