@@ -1,6 +1,6 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../stylesheets/newpost.css';
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import httpService from '../../services/httpService';
@@ -34,7 +34,13 @@ const NewPost = () => {
       toast.error('Error: No image selected!');
       return true;
     }
-    if (values.title === '' || values.imageCaption === '' || values.preview === '') {
+    if (
+      values.title === '' ||
+      values.imageCaption === '' ||
+      values.preview === '' ||
+      !editorState.getCurrentContent().hasText() ||
+      editorState.getCurrentContent().getPlainText().trim().length === 0
+    ) {
       toast.error('Error: All fields must be filled in!');
       return true;
     }
@@ -109,7 +115,7 @@ const NewPost = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Sidebar />
       <CenteredContainer>
         <h1>New Post</h1>
@@ -118,7 +124,7 @@ const NewPost = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-2">
                 <Form.Label>Post Title</Form.Label>
-                <Form.Control type="title" placeholder="Enter Title" name="title" value={values.title} onChange={handleChange} />
+                <Form.Control type="title" placeholder="Enter Title" maxLength={60} name="title" value={values.title} onChange={handleChange} />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Title Image</Form.Label>
@@ -126,11 +132,11 @@ const NewPost = () => {
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Title Image Caption</Form.Label>
-                <Form.Control type="imageCaption" placeholder="Image Caption" name="imageCaption" value={values.imageCaption} onChange={handleChange} />
+                <Form.Control type="imageCaption" placeholder="Image Caption" maxLength={100} name="imageCaption" value={values.imageCaption} onChange={handleChange} />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Preview</Form.Label>
-                <Form.Control type="preview" placeholder="Preview" name="preview" value={values.preview} onChange={handleChange} />
+                <Form.Control type="preview" placeholder="Preview" maxLength={100} name="preview" value={values.preview} onChange={handleChange} />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Content</Form.Label>
@@ -146,7 +152,7 @@ const NewPost = () => {
           </Col>
         </Container>
       </CenteredContainer>
-    </div>
+    </React.Fragment>
   );
 };
 

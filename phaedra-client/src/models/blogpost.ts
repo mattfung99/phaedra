@@ -25,7 +25,6 @@ export interface BlogPostList {
   title: string;
   author: string;
   updated_at: string;
-  image_caption: string;
   preview: string;
   image_id: number;
 }
@@ -45,6 +44,10 @@ export interface BlogPostInput {
   image_id: number;
   user_id: number;
 }
+
+export type BlogPostId = {
+  blogID: string;
+};
 
 export const modifyBlogPost = (values: BlogNewPost, editorContent: string, isDraft: number, imageId: number, userId: number): BlogPostInput => {
   return {

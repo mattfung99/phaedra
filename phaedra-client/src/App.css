@@ -44,6 +44,10 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.public-page-header {
+  margin-top: 35px;
+}
+
 .public {
   margin-top: 3rem;
   height: 80vh;

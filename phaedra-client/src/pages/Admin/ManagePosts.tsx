@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Admin/Sidebar';
 import httpService from '../../services/httpService';
 import { toast } from 'react-toastify';
@@ -26,7 +26,7 @@ const ManagePosts = () => {
     try {
       const response: any = await httpService.get(url);
       setPosts(response.data);
-    } catch (error) {
+    } catch (error: any) {
       toast.error('Error: Unable to retrieve posts');
     }
   };
@@ -36,7 +36,7 @@ const ManagePosts = () => {
   }, []);
 
   return (
-    <div>
+    <React.Fragment>
       <Sidebar />
       <CenteredContainer>
         <h1>Manage Posts</h1>
@@ -57,7 +57,7 @@ const ManagePosts = () => {
         </Table>
         <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate} />
       </CenteredContainer>
-    </div>
+    </React.Fragment>
   );
 };
 

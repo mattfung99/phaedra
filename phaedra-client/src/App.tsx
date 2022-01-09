@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Public/Home';
 import About from './pages/Public/About';
 import Blog from './pages/Public/Blog';
+import ViewBlog from './pages/Public/ViewBlog';
 import Contact from './pages/Public/Contact';
 import Login from './pages/Public/Login';
 import Error404 from './pages/Public/Error404';
@@ -25,6 +26,7 @@ const App = () => {
           <PublicRoute exact path="/" component={Home} />
           <PublicRoute exact path="/about" component={About} />
           <PublicRoute exact path="/blog" component={Blog} />
+          <PublicRoute path="/blog/:blogID" component={ViewBlog} />
           <PublicRoute exact path="/contact" component={Contact} />
           <PublicRoute exact path="/login" component={Login} />
           <AdminRoute exact path="/admin" component={Dashboard} />

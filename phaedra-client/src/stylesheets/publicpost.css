@@ -1,0 +1,29 @@
+.public-post-body {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.public-post-footer {
+  text-align: right;
+}
+
+.public-post-image {
+  height: 200px;
+  object-fit: contain;
+  width: 500px;
+}
+
+.public-post-spacing {
+  margin-bottom: 10px;
+}
+
+.public-post-spacing:hover {
+  color: grey;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.public-post-title {
+  font-size: 2em;
+  font-weight: bolder;
+}

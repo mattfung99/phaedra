@@ -9,7 +9,6 @@ import { imageNegativeOrNanInputError, imageDNEError, imageMimetypeError } from 
 
 const router = express.Router();
 
-router.get('/:id', validateParamId('id', TABLE_IMAGE, imageNegativeOrNanInputError, imageDNEError), controller.getImageById);
 router.post('', imageUpload.single('image'), validateParamProperties(imageMimetypeError), controller.addImage);
 router.delete('/:id', validateParamId('id', TABLE_IMAGE, imageNegativeOrNanInputError, imageDNEError), registerImageDelete, validateInput, controller.deleteImageById);
 
