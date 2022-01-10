@@ -1,7 +1,7 @@
 .editor-class {
   /* background-color:lightgray; */
-  padding: 1rem;
   border: 1px solid #ccc;
+  padding: 1rem;
 }
 
 .publish-button {
@@ -13,6 +13,6 @@
 }
 
 .wrapper-class {
-  padding: 1rem;
   border: 1px solid #ccc;
+  padding: 1rem;
 }
