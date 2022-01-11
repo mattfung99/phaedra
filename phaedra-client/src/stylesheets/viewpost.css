@@ -1,0 +1,31 @@
+.view-post-author {
+  font-size: 0.7em;
+  padding-left: 35px;
+  padding-bottom: 10px;
+}
+
+.view-post-body {
+  margin-top: 3rem;
+}
+
+.view-post-container {
+  margin: 0;
+}
+
+.view-post-image {
+  height: auto;
+  width: 100%;
+}
+
+.view-post-image-caption {
+  font-style: italic;
+}
+
+.view-post-preview {
+  font-size: 1em;
+}
+
+.view-post-title {
+  font-size: 3em;
+  font-weight: bolder;
+}

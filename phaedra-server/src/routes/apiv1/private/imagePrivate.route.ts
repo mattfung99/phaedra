@@ -1,7 +1,7 @@
 import express from 'express';
 import controller from '../../../controllers/apiv1/image.controller';
 import { registerImageDelete } from 'db/schema/image.schema';
-import { validateInput } from 'middlewares/inputSanitzation';
+import { validateInput } from 'middlewares/inputSanitzation.mw';
 import { validateParamId, validateParamProperties } from 'middlewares/paramsValidation.mw';
 import { imageUpload } from 'middlewares/multerValidation.mw';
 import { TABLE_IMAGE } from 'db/models/tables.model';
