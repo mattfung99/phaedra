@@ -1,6 +1,6 @@
 import http from 'http';
 import { Application } from 'express';
-import { blogPostNegativeOrNanInputError, blogPostDNEError } from 'utils/errorMessages';
+import { blogPostNegativeOrNanInputError, blogPostDNEError, blogPostAdminNegativeOrNanInputError } from 'utils/errorMessages';
 import { attemptAuthentication, setupApp, setupHttpServer, Accounts } from './tools/configTests';
 const expect = require('chai').expect;
 const chai = require('chai');
@@ -295,6 +295,71 @@ describe('POST /api/v1/admin-blog-post/draft', () => {
         expect(res.body.is_draft).to.deep.equal(1);
         expect(res.body.image_id).to.deep.equal(1);
         expect(res.body.user_id).to.deep.equal(1);
+        done();
+      });
+  });
+});
+
+// Test 6: Edit a blog post by id
+
+// Test 7: Remove a blog post by id
+describe('DELETE /api/v1/admin-blog-post/:id', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should return error code 400 for blog post that is negative or NaN', (done) => {
+    agent.delete('/api/v1/admin-blog-post/-1').end((err: any, res: any) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(400);
+      expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminNegativeOrNanInputError));
+      done();
+    });
+  });
+  it('should return error code 400 for invalid URL', (done) => {
+    agent.delete('/api/v1/admin-blog-post/wow').end((err: any, res: any) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(400);
+      expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminNegativeOrNanInputError));
+      done();
+    });
+  });
+  it('should return error code 404 for blog post yet to be created', (done) => {
+    agent.delete('/api/v1/admin-blog-post/55').end((err: any, res: any) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(404);
+      expect(res.text).to.deep.equal(JSON.stringify(blogPostDNEError));
+      done();
+    });
+  });
+  it('should delete a blog post by id unsuccessfully', (done) => {
+    agent
+      .delete('/api/v1/admin-blog-post/3')
+      .set('content-type', 'application/json')
+      .send({
+        FLAG_TESTING: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(422);
+        done();
+      });
+  });
+  it('should delete a blog post by id successfully', (done) => {
+    agent
+      .delete('/api/v1/admin-blog-post/3')
+      .set('content-type', 'application/json')
+      .send({
+        FLAG_TESTING: true
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(204);
         done();
       });
   });
