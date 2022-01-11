@@ -28,7 +28,6 @@ const Blog = () => {
     try {
       const response: any = await httpService.get(url);
       setBlogPosts(response.data);
-      console.log(response.data);
     } catch (error) {
       toast.error('Error: Unable to retrieve posts');
     }

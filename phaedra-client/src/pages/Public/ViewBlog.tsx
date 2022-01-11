@@ -1,4 +1,5 @@
 import '../../App.css';
+import '../../stylesheets/viewpost.css';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../../components/Public/Header';
@@ -8,7 +9,9 @@ import { toast } from 'react-toastify';
 import { Container, Card } from 'react-bootstrap';
 import CenteredContainer from '../../components/Shared/CenteredContainer';
 import { BlogPostId, BlogPost } from '../../models/blogpost';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import initialViewPost from '../../utils/json/initialViewPost.json';
+import { makeDateShort, makeTimeShort } from '../../utils/timezone';
 import Error404 from './Error404';
 
 const ViewBlog = () => {
@@ -16,19 +19,20 @@ const ViewBlog = () => {
   const [isFetched, setIsFetched] = useState<boolean>(true);
   const [blogPost, setBlogPost] = useState<BlogPost>(initialViewPost);
   const [blogPostImage, setBlogPostImageState] = useState<string>('');
+  const [editorState, setEditorState] = useState<any>(() => EditorState.createEmpty());
 
   useEffect(() => {
-    document.title = isFetched ? 'Blog #'.concat(blogID) : '404: Page not found';
-  }, [isFetched]);
+    document.title = isFetched ? blogPost.title : '404: Page not found';
+  }, [isFetched, blogPost]);
 
   const getBlogPost = async () => {
     const url = `/api/v1/blog-post/${blogID}`;
     try {
       const response: any = await httpService.get(url);
       setBlogPost(response.data);
-      console.log(response.data);
+      getBlogPostImage(response.data.image_id);
+      setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.content))));
     } catch (error) {
-      // toast.error('Error: Unable to retrieve posts');
       setIsFetched(false);
     }
   };
@@ -52,19 +56,27 @@ const ViewBlog = () => {
     getBlogPost();
   }, []);
 
+  const onChangeHandler = () => {};
+
   return (
     <React.Fragment>
       {isFetched ? (
         <CenteredContainer>
           <Header />
-          <Card border="secondary">
+          <Card border="secondary" className="view-post-body">
             <Card.Body>
-              <Container className="justify-content-md-center row">{/* <Card.Img className="public-post-image img-thumbnail" variant="top" src={blogPostImage} /> */}</Container>
-              <Container>
-                <Card.Title>{blogPost.title}</Card.Title>
-                <Card.Subtitle>{'Written by '.concat(blogPost.author)}</Card.Subtitle>
-                <Card.Text>{blogPost.preview}</Card.Text>
+              <Card.Title className="text-center view-post-title">{blogPost.title}</Card.Title>
+              <Card.Text className="text-center view-post-preview">{blogPost.preview}</Card.Text>
+              <Card.Subtitle className="text-muted view-post-author">
+                {blogPost.author.concat(' | ').concat('Updated ').concat(makeTimeShort(blogPost.updated_at)).concat(', ').concat(makeDateShort(blogPost.updated_at))}
+              </Card.Subtitle>
+              <Container className="justify-content-md-center row view-post-container">
+                <Card.Img className="view-post-image" variant="top" src={blogPostImage} />
+                <Card.Text className="text-center text-muted view-post-image-caption">{blogPost.image_caption}</Card.Text>
               </Container>
+              <Card.Text>
+                <Editor editorState={editorState} readOnly={true} onChange={onChangeHandler}></Editor>
+              </Card.Text>
             </Card.Body>
           </Card>
           <Footer />

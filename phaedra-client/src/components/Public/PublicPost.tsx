@@ -51,7 +51,7 @@ const PublicPost = ({ data }: Props) => {
             <Card.Text>{data.preview}</Card.Text>
           </Container>
         </Card.Body>
-        <Card.Footer className="text-muted public-post-footer">{'Posted on '.concat(makeDateShort(data.updated_at)).concat(' at ').concat(makeTimeShort(data.updated_at))}</Card.Footer>
+        <Card.Footer className="text-muted public-post-footer">{'Updated '.concat(makeTimeShort(data.updated_at)).concat(', ').concat(makeDateShort(data.updated_at))}</Card.Footer>
       </Card>
     </React.Fragment>
   );
