@@ -1,11 +1,15 @@
 import logging from '../../config/logging';
 import { Request, Response, NextFunction } from 'express';
 import { Knex } from '../../config/mysql';
-import { NAMESPACE_BLOG_POST, TABLE_BLOG_POST } from 'db/models/tables.model';
+import { NAMESPACE_BLOG_POST, NAMESPACE_IMAGE, TABLE_BLOG_POST, TABLE_IMAGE } from 'db/models/tables.model';
+import { deleteUploadedImage } from 'utils/removeAssetImage';
 import userTemplate from './templates/getUser.controller';
 import { getItemById, getItems } from './templates/getTemplate.controller';
 import { createItem } from './templates/createTemplate.controller';
+import { deleteItemById } from './templates/deleteTemplate.controller';
 import { AuthorName } from 'db/models/userInfo.model';
+import { Image } from 'db/models/image.model';
+import { BlogPost } from 'db/models/blogPost.model';
 
 const queryAllBlogPostsByDesc = () => {
   return Knex.select('id', 'title', 'author', 'updated_at', 'preview', 'image_id').from(TABLE_BLOG_POST).where('is_draft', false).orderBy('updated_at', 'desc').orderBy('id', 'desc');
@@ -43,4 +47,22 @@ const createBlogPost = async (req: Request, res: Response, next: NextFunction) =
   await createItem(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, createInputtedReqBody(req, userId, author.first_name.concat(' ').concat(author.last_name)));
 };
 
-export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, createBlogPost };
+const deleteBlogPostById = async (req: Request, res: Response, next: NextFunction) => {
+  logging.info(NAMESPACE_BLOG_POST, `DELETING A ${TABLE_BLOG_POST.toUpperCase()} BY ID`);
+  const blogPostId: number = +req.params.id;
+  const FLAG_TESTING: boolean = JSON.parse(req.body.FLAG_TESTING);
+  try {
+    const retrievedImage: Image = await Knex.select('*').from(TABLE_BLOG_POST).where('id', blogPostId).first();
+    const imageId: number = retrievedImage.id;
+    const retrievedBlogPostById: BlogPost = (await deleteItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, blogPostId)) as BlogPost;
+    const retrievedImageById: Image = (await deleteItemById(req, res, next, NAMESPACE_IMAGE, TABLE_IMAGE, imageId)) as Image;
+    if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
+    logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);
+    res.sendStatus(204);
+  } catch (error: any) {
+    logging.error(NAMESPACE_IMAGE, error.message, error);
+    res.status(500).send(error);
+  }
+};
+
+export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, createBlogPost, deleteBlogPostById };

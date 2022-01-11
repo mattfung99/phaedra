@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Knex } from '../../config/mysql';
 import { NAMESPACE_IMAGE, TABLE_IMAGE } from 'db/models/tables.model';
 import { deleteUploadedImage } from 'utils/removeAssetImage';
+import { deleteItemById } from './templates/deleteTemplate.controller';
 import { Image } from 'db/models/image.model';
 
 const inputtedReqImage = (req: any, filepath: string, mimetype: string) => {
@@ -42,11 +43,8 @@ const deleteImageById = async (req: any, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE_IMAGE, `DELETING A ${TABLE_IMAGE.toUpperCase()} BY ID`);
   const imageId: number = +req.params.id;
   const FLAG_TESTING: boolean = JSON.parse(req.body.FLAG_TESTING);
-  console.log(FLAG_TESTING);
   try {
-    const retrievedImageById: Image = await Knex.select('filepath').from(TABLE_IMAGE).where('id', imageId).first();
-    logging.info(NAMESPACE_IMAGE, 'DELETED FILE IS ', retrievedImageById);
-    await Knex(TABLE_IMAGE).del().where('id', imageId);
+    const retrievedImageById: Image = (await deleteItemById(req, res, next, NAMESPACE_IMAGE, TABLE_IMAGE, imageId)) as Image;
     if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
     logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);
     res.sendStatus(204);
