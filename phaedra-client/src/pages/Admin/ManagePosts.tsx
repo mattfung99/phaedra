@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Sidebar from '../../components/Admin/Sidebar';
 import httpService from '../../services/httpService';
 import { toast } from 'react-toastify';
@@ -11,6 +12,7 @@ import { BlogPostAdminList, deleteBlogPost } from '../../models/blogpost';
 import { capitalize } from '../../utils/capitalizeString';
 
 const ManagePosts = () => {
+  let history = useHistory();
   const DEFAULT_INDEX: number = 0;
   const [posts, setPosts] = useState<BlogPostAdminList[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -48,6 +50,12 @@ const ManagePosts = () => {
   useEffect(() => {
     getPosts();
   }, []);
+
+  const onEditBlogPost = (event: any, blogPostId: number) => {
+    event.stopPropagation();
+    event.preventDefault();
+    history.push(`/admin/edit/${blogPostId}`);
+  };
 
   const onDeleteBlogPost = (event: any, blogPostId: number) => {
     event.stopPropagation();
@@ -92,7 +100,7 @@ const ManagePosts = () => {
             </tr>
           </thead>
           {currentPosts.map((post: BlogPostAdminList, index: number) => (
-            <AdminPost key={index} data={post} onDeleteBlogPost={onDeleteBlogPost} />
+            <AdminPost key={index} data={post} onEditBlogPost={onEditBlogPost} onDeleteBlogPost={onDeleteBlogPost} />
           ))}
         </Table>
         <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate} />

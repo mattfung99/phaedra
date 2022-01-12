@@ -147,7 +147,7 @@ describe('GET /api/v1/blog-post/:id', () => {
       expect(res.body.author).to.deep.equal(authors[0]);
       expect(res.body.image_caption).to.deep.equal(image_captions[0]);
       expect(res.body.preview).to.deep.equal(previews[0]);
-      expect(res.body.content).to.deep.equal('');
+      expect(res.body.content).to.deep.equal('{"blocks":[{"key":"12aaa","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}');
       expect(res.body.is_draft).to.deep.equal(0);
       expect(res.body.image_id).to.deep.equal(2);
       expect(res.body.user_id).to.deep.equal(user_ids[0]);
@@ -212,7 +212,7 @@ describe('GET /api/v1/admin-blog-post/:id', () => {
       expect(res.body.author).to.deep.equal(authors[0]);
       expect(res.body.image_caption).to.deep.equal(image_captions[0]);
       expect(res.body.preview).to.deep.equal(previews[0]);
-      expect(res.body.content).to.deep.equal('');
+      expect(res.body.content).to.deep.equal('{"blocks":[{"key":"12aaa","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}');
       expect(res.body.is_draft).to.deep.equal(0);
       expect(res.body.image_id).to.deep.equal(2);
       expect(res.body.user_id).to.deep.equal(user_ids[0]);

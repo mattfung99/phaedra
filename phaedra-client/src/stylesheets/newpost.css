@@ -1,7 +1,10 @@
 .editor-class {
-  /* background-color:lightgray; */
   border: 1px solid #ccc;
   padding: 1rem;
+}
+
+.form-image-notifier {
+  font-style: italic;
 }
 
 .publish-button {

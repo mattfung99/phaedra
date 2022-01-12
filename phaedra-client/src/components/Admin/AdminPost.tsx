@@ -6,10 +6,11 @@ import { makeDateShort } from '../../utils/timezone';
 
 interface Props {
   data: BlogPostAdminList;
+  onEditBlogPost: any;
   onDeleteBlogPost: any;
 }
 
-const AdminPost = ({ data, onDeleteBlogPost }: Props) => {
+const AdminPost = ({ data, onEditBlogPost, onDeleteBlogPost }: Props) => {
   return (
     <React.Fragment>
       <tbody>
@@ -22,7 +23,13 @@ const AdminPost = ({ data, onDeleteBlogPost }: Props) => {
           <td>{data.author}</td>
           <td>{makeDateShort(data.updated_at)}</td>
           <td>
-            <Button variant="outline-primary" type="button">
+            <Button
+              variant="outline-primary"
+              type="button"
+              onClick={(event: any) => {
+                onEditBlogPost(event, data.id);
+              }}
+            >
               Edit
             </Button>
             <Button

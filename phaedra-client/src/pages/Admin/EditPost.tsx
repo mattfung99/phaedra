@@ -1,32 +1,37 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../stylesheets/newpost.css';
 import React, { useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import httpService from '../../services/httpService';
 import Sidebar from '../../components/Admin/Sidebar';
 import CenteredContainer from '../../components/Shared/CenteredContainer';
 import { Container, Col, Form, Button } from 'react-bootstrap';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { UserContext } from '../../hooks/UserContext';
 import initialNewPost from '../../utils/json/initialNewPost.json';
+import initialEditPost from '../../utils/json/initialEditPost.json';
 import { capitalize } from '../../utils/capitalizeString';
-import { BlogNewPost, BlogPostInput, modifyBlogPost } from '../../models/blogpost';
+import { BlogNewPost, BlogPostInput, modifyBlogPost, BlogPostId, AdminBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData } from '../../models/image';
+import Error404 from '../Public/Error404';
 
-const NewPost = () => {
+const EditPost = () => {
   let history = useHistory();
   const userContext = useContext(UserContext);
+  const { blogID } = useParams<BlogPostId>();
+  const [isFetched, setIsFetched] = useState<boolean>(true);
   const [uploadedImage, setUploadedImageState] = useState<string>('');
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [post, setPost] = useState<AdminBlogPost>(initialEditPost);
   const [values, setValue] = useState<BlogNewPost>(initialNewPost);
   const state = {
     configButton: 1
   };
 
   useEffect(() => {
-    document.title = 'New Post';
+    document.title = 'Edit Post';
   }, []);
 
   const validatePublishment = () => {
@@ -45,6 +50,22 @@ const NewPost = () => {
       return true;
     }
     return false;
+  };
+
+  const getBlogPost = async () => {
+    const url = `/api/v1/admin-blog-post/${blogID}`;
+    try {
+      const response: any = await httpService.get(url);
+      setPost(response.data);
+      setValue({
+        title: response.data.title,
+        imageCaption: response.data.image_caption,
+        preview: response.data.preview
+      });
+      setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.content))));
+    } catch (error) {
+      setIsFetched(false);
+    }
   };
 
   const createBlogPost = async (newBlogPost: BlogPostInput) => {
@@ -114,46 +135,59 @@ const NewPost = () => {
     setUploadedImageState(event.target.files[0]);
   };
 
+  useEffect(() => {
+    getBlogPost();
+  }, []);
+
   return (
     <React.Fragment>
-      <Sidebar />
-      <CenteredContainer>
-        <h1>New Post</h1>
-        <Container>
-          <Col xs>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-2">
-                <Form.Label>Post Title</Form.Label>
-                <Form.Control type="title" placeholder="Enter Title" maxLength={60} name="title" value={values.title} onChange={handleChange} />
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Post Title Image</Form.Label>
-                <Form.Control accept="image/jpg, image/jpeg, image/png" type="file" name="image" id="image" onChange={validateImageExtension} size="sm" />
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Post Title Image Caption</Form.Label>
-                <Form.Control type="imageCaption" placeholder="Image Caption" maxLength={100} name="imageCaption" value={values.imageCaption} onChange={handleChange} />
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Post Preview</Form.Label>
-                <Form.Control type="preview" placeholder="Preview" maxLength={100} name="preview" value={values.preview} onChange={handleChange} />
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Post Content</Form.Label>
-                <Editor editorState={editorState} onEditorStateChange={handleEditorChange} wrapperClassName="wrapper-class" editorClassName="editor-class" toolbarClassName="toolbar-class" />
-              </Form.Group>
-              <Button className="float-end publish-button" variant="warning" type="submit" onClick={() => (state.configButton = 1)}>
-                Publish
-              </Button>
-              <Button className="float-end" variant="success" type="submit" onClick={() => (state.configButton = 2)}>
-                Save as Draft
-              </Button>
-            </Form>
-          </Col>
-        </Container>
-      </CenteredContainer>
+      {isFetched ? (
+        <React.Fragment>
+          <Sidebar />
+          <CenteredContainer>
+            <h1>Edit Post</h1>
+            <Container>
+              <Col xs>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Post Title</Form.Label>
+                    <Form.Control type="title" placeholder="Enter Title" maxLength={60} name="title" value={values.title} onChange={handleChange} />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Post Title Image</Form.Label>
+                    <Form.Control accept="image/jpg, image/jpeg, image/png" type="file" name="image" id="image" onChange={validateImageExtension} size="sm" />
+                    <Form.Text className="form-image-notifier">
+                      {post.image_id === 1 ? 'No photo was previously uploaded in this draft' : `Previously uploaded ${post.filename.substring(post.filename.indexOf('_') + 1)}`}
+                    </Form.Text>
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Post Title Image Caption</Form.Label>
+                    <Form.Control type="imageCaption" placeholder="Image Caption" maxLength={100} name="imageCaption" value={values.imageCaption} onChange={handleChange} />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Post Preview</Form.Label>
+                    <Form.Control type="preview" placeholder="Preview" maxLength={100} name="preview" value={values.preview} onChange={handleChange} />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Post Content</Form.Label>
+                    <Editor editorState={editorState} onEditorStateChange={handleEditorChange} wrapperClassName="wrapper-class" editorClassName="editor-class" toolbarClassName="toolbar-class" />
+                  </Form.Group>
+                  <Button className="float-end publish-button" variant="warning" type="submit" onClick={() => (state.configButton = 1)}>
+                    Publish
+                  </Button>
+                  <Button className="float-end" variant="success" type="submit" onClick={() => (state.configButton = 2)}>
+                    Save as Draft
+                  </Button>
+                </Form>
+              </Col>
+            </Container>
+          </CenteredContainer>
+        </React.Fragment>
+      ) : (
+        <Error404 />
+      )}
     </React.Fragment>
   );
 };
 
-export default NewPost;
+export default EditPost;
