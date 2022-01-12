@@ -206,6 +206,7 @@ describe('GET /api/v1/admin-blog-post/:id', () => {
       expect(res.body).to.have.deep.property('is_draft');
       expect(res.body).to.have.deep.property('image_id');
       expect(res.body).to.have.deep.property('user_id');
+      expect(res.body).to.have.deep.property('filename');
       expect(res.body.id).to.deep.equal(1);
       expect(res.body.title).to.deep.equal(titles[0]);
       expect(res.body.author).to.deep.equal(authors[0]);
@@ -215,6 +216,7 @@ describe('GET /api/v1/admin-blog-post/:id', () => {
       expect(res.body.is_draft).to.deep.equal(0);
       expect(res.body.image_id).to.deep.equal(2);
       expect(res.body.user_id).to.deep.equal(user_ids[0]);
+      expect(res.body.filename).to.deep.equal('1641190145997_statue1_angry.png');
       done();
     });
   });

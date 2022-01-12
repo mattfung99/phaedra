@@ -23,6 +23,14 @@ const queryBlogPostById = (blogPostId: number) => {
   return Knex.select('*').from(TABLE_BLOG_POST).where('id', blogPostId).first();
 };
 
+const queryAdminBlogPostById = (blogPostId: number) => {
+  return Knex.select(`${TABLE_BLOG_POST}.*`, `${TABLE_IMAGE}.filename`)
+    .from(TABLE_BLOG_POST)
+    .join(TABLE_IMAGE, `${TABLE_IMAGE}.id`, '=', `${TABLE_BLOG_POST}.image_id`)
+    .where(`${TABLE_BLOG_POST}.id`, blogPostId)
+    .first();
+};
+
 const createInputtedReqBody = (req: Request, userId: number, author: string) => {
   const { title, image_caption, preview, content, is_draft, image_id } = req.body;
   return { title: title, author: author, image_caption: image_caption, preview: preview, content: content, is_draft: is_draft, image_id: image_id, user_id: userId };
@@ -39,6 +47,11 @@ const getAdminBlogPosts = async (req: Request, res: Response, next: NextFunction
 const getBlogPostById = async (req: Request, res: Response, next: NextFunction) => {
   const blogPostId: number = +req.params.id;
   await getItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, queryBlogPostById(blogPostId));
+};
+
+const getAdminBlogPostById = async (req: Request, res: Response, next: NextFunction) => {
+  const blogPostId: number = +req.params.id;
+  await getItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, queryAdminBlogPostById(blogPostId));
 };
 
 const createBlogPost = async (req: Request, res: Response, next: NextFunction) => {
@@ -67,4 +80,4 @@ const deleteBlogPostById = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, createBlogPost, deleteBlogPostById };
+export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, getAdminBlogPostById, createBlogPost, deleteBlogPostById };

@@ -9,7 +9,7 @@ import { blogPostDNEError, blogPostAdminNegativeOrNanInputError } from 'utils/er
 const router = express.Router();
 
 router.get('', controller.getAdminBlogPosts);
-router.get('/:id', validateParamId('id', TABLE_BLOG_POST, blogPostAdminNegativeOrNanInputError, blogPostDNEError), controller.getBlogPostById);
+router.get('/:id', validateParamId('id', TABLE_BLOG_POST, blogPostAdminNegativeOrNanInputError, blogPostDNEError), controller.getAdminBlogPostById);
 router.post('/publish', registerBlogPostPublish, validateInput, controller.createBlogPost);
 router.post('/draft', registerBlogPostDraft, validateInput, controller.createBlogPost);
 router.delete('/:id', validateParamId('id', TABLE_BLOG_POST, blogPostAdminNegativeOrNanInputError, blogPostDNEError), registerBlogPostDelete, validateInput, controller.deleteBlogPostById);

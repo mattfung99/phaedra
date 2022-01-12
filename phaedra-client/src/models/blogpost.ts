@@ -11,6 +11,20 @@ export interface BlogPost {
   user_id: number;
 }
 
+export interface AdminBlogPost {
+  id: number;
+  title: string;
+  author: string;
+  updated_at: string;
+  image_caption: string;
+  preview: string;
+  content: string;
+  is_draft: boolean;
+  image_id: number;
+  user_id: number;
+  filename: string;
+}
+
 export interface BlogPostAdminList {
   id: number;
   title: string;

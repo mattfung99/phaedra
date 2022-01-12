@@ -1,6 +1,6 @@
 import logging from '../../../config/logging';
 import { Request, Response, NextFunction } from 'express';
-import { BlogPost, BlogPostAdminList, BlogPostList } from 'db/models/blogPost.model';
+import { BlogPost, AdminBlogPost, BlogPostAdminList, BlogPostList } from 'db/models/blogPost.model';
 
 export const getItems = async (req: Request, res: Response, next: NextFunction, namespace: string, tableName: string, customQuery: any) => {
   logging.info(namespace, `GETTING LIST OF ${tableName.toUpperCase()}S`);
@@ -17,7 +17,7 @@ export const getItems = async (req: Request, res: Response, next: NextFunction, 
 export const getItemById = async (req: Request, res: Response, next: NextFunction, namespace: string, tableName: string, customQuery: any) => {
   logging.info(namespace, `GETTING ${tableName.toUpperCase()}(S) BY ID`);
   try {
-    const retrievedItems: BlogPost = await customQuery;
+    const retrievedItems: BlogPost | AdminBlogPost = await customQuery;
     logging.info(namespace, `RETRIEVED ITEM(S) FOR ${tableName.toUpperCase()} BY ID:`, retrievedItems);
     res.status(200).send(retrievedItems);
   } catch (error: any) {
