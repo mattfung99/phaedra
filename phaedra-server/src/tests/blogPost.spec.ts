@@ -47,7 +47,7 @@ describe('GET /api/v1/blog-post', () => {
         expect(item.title).to.deep.equal(titles[id]);
         expect(item.author).to.deep.equal(authors[id]);
         expect(item.preview).to.deep.equal(previews[id]);
-        expect(item.image_id).to.deep.equal(ids[id]);
+        expect(item.image_id).to.deep.equal(ids[id] + 1);
       });
       done();
     });
@@ -149,7 +149,7 @@ describe('GET /api/v1/blog-post/:id', () => {
       expect(res.body.preview).to.deep.equal(previews[0]);
       expect(res.body.content).to.deep.equal('');
       expect(res.body.is_draft).to.deep.equal(0);
-      expect(res.body.image_id).to.deep.equal(1);
+      expect(res.body.image_id).to.deep.equal(2);
       expect(res.body.user_id).to.deep.equal(user_ids[0]);
       done();
     });
@@ -213,7 +213,7 @@ describe('GET /api/v1/admin-blog-post/:id', () => {
       expect(res.body.preview).to.deep.equal(previews[0]);
       expect(res.body.content).to.deep.equal('');
       expect(res.body.is_draft).to.deep.equal(0);
-      expect(res.body.image_id).to.deep.equal(1);
+      expect(res.body.image_id).to.deep.equal(2);
       expect(res.body.user_id).to.deep.equal(user_ids[0]);
       done();
     });

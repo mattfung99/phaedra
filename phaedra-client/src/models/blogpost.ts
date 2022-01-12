@@ -60,3 +60,9 @@ export const modifyBlogPost = (values: BlogNewPost, editorContent: string, isDra
     user_id: userId
   };
 };
+
+export const deleteBlogPost = (): object => {
+  return {
+    FLAG_TESTING: false
+  };
+};

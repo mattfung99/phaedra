@@ -1,19 +1,19 @@
 version: '3.9'
 
 services:
-  # phaedra-client:
-  #   build:
-  #     context: ./phaedra-client
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./phaedra-client:/phaedra-client
-  #   ports:
-  #     - 3000:3000
-  #   image: phaedra-client:client
-  #   container_name: phaedra-client
-  #   command: npm start
+  phaedra-client:
+    build:
+      context: ./phaedra-client
+      dockerfile: Dockerfile
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./phaedra-client:/phaedra-client
+    ports:
+      - 3000:3000
+    image: phaedra-client:client
+    container_name: phaedra-client
+    command: npm start
 
   phaedra-server:
     build:

@@ -52,12 +52,14 @@ const deleteBlogPostById = async (req: Request, res: Response, next: NextFunctio
   const blogPostId: number = +req.params.id;
   const FLAG_TESTING: boolean = JSON.parse(req.body.FLAG_TESTING);
   try {
-    const retrievedImage: Image = await Knex.select('*').from(TABLE_BLOG_POST).where('id', blogPostId).first();
-    const imageId: number = retrievedImage.id;
+    const retrievedBlogPost: BlogPost = await Knex.select('*').from(TABLE_BLOG_POST).where('id', blogPostId).first();
+    const imageId: number = retrievedBlogPost.image_id;
     const retrievedBlogPostById: BlogPost = (await deleteItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, blogPostId)) as BlogPost;
-    const retrievedImageById: Image = (await deleteItemById(req, res, next, NAMESPACE_IMAGE, TABLE_IMAGE, imageId)) as Image;
-    if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
-    logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);
+    if (imageId !== 1) {
+      const retrievedImageById: Image = (await deleteItemById(req, res, next, NAMESPACE_IMAGE, TABLE_IMAGE, imageId)) as Image;
+      if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
+      logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);
+    }
     res.sendStatus(204);
   } catch (error: any) {
     logging.error(NAMESPACE_IMAGE, error.message, error);

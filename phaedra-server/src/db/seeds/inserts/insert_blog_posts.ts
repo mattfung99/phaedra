@@ -9,7 +9,7 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       preview: 'This is a preview of the first post',
       content: '',
       is_draft: false,
-      image_id: 1,
+      image_id: 2,
       user_id: 1
     },
     {
@@ -19,7 +19,7 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       preview: 'This is a preview of the second post',
       content: '',
       is_draft: true,
-      image_id: 2,
+      image_id: 3,
       user_id: 1
     },
     {
@@ -29,7 +29,7 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       preview: 'This is a preview of the third post',
       content: '',
       is_draft: false,
-      image_id: 3,
+      image_id: 4,
       user_id: 2
     }
   ]);
