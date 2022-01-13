@@ -1,6 +1,12 @@
 import http from 'http';
 import { Application } from 'express';
-import { blogPostNegativeOrNanInputError, blogPostDNEError, blogPostAdminNegativeOrNanInputError } from 'utils/errorMessages';
+import {
+  blogPostNegativeOrNanInputError,
+  blogPostDNEError,
+  blogPostAdminNegativeOrNanInputError,
+  blogPostAdminPublishNegativeOrNanInputError,
+  blogPostAdminDraftNegativeOrNanInputError
+} from 'utils/errorMessages';
 import { attemptAuthentication, setupApp, setupHttpServer, Accounts } from './tools/configTests';
 const expect = require('chai').expect;
 const chai = require('chai');
@@ -366,9 +372,271 @@ describe('POST /api/v1/admin-blog-post/draft', () => {
   });
 });
 
-// Test 7: Edit a blog post by id
+// Test 7: Edit a published blog post by id
+describe('PUT /api/v1/admin-blog-post/publish/:id', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should return error code 400 for blog post that is negative or NaN', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/publish/-1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Edited Test Post',
+        image_caption: 'A very ugly image',
+        preview: 'This is an EDITED test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminPublishNegativeOrNanInputError));
+        done();
+      });
+  });
+  it('should return error code 400 for invalid URL', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/publish/wow')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Edited Test Post',
+        image_caption: 'A very ugly image',
+        preview: 'This is an EDITED test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminPublishNegativeOrNanInputError));
+        done();
+      });
+  });
+  it('should return error code 404 for blog post yet to be created', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/publish/55')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Edited Test Post',
+        image_caption: 'A very ugly image',
+        preview: 'This is an EDITED test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(404);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostDNEError));
+        done();
+      });
+  });
+  it('should edit a published blog post by id unsuccessfully', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/publish/1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Edited Test Post',
+        image_caption: 'A very ugly image',
+        preview: 'This is an EDITED test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('errors');
+        done();
+      });
+  });
+  it('should edit a published blog post by id successfully', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/publish/1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Edited Test Post',
+        image_caption: 'A very ugly image',
+        preview: 'This is an EDITED test post...',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: 1
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('id');
+        expect(res.body).to.have.deep.property('title');
+        expect(res.body).to.have.deep.property('author');
+        expect(res.body).to.have.deep.property('updated_at');
+        expect(res.body).to.have.deep.property('image_caption');
+        expect(res.body).to.have.deep.property('preview');
+        expect(res.body).to.have.deep.property('content');
+        expect(res.body).to.have.deep.property('is_draft');
+        expect(res.body).to.have.deep.property('image_id');
+        expect(res.body).to.have.deep.property('user_id');
+        expect(res.body.title).to.deep.equal('Edited Test Post');
+        expect(res.body.author).to.deep.equal('John Doe');
+        expect(res.body.image_caption).to.deep.equal('A very ugly image');
+        expect(res.body.preview).to.deep.equal('This is an EDITED test post...');
+        expect(res.body.content).to.deep.equal('');
+        expect(res.body.is_draft).to.deep.equal(0);
+        expect(res.body.image_id).to.deep.equal(1);
+        expect(res.body.user_id).to.deep.equal(1);
+        done();
+      });
+  });
+});
 
-// Test 8: Remove a blog post by id
+// Test 8: Edit a draft blog post by id
+describe('PUT /api/v1/admin-blog-post/draft/:id', () => {
+  before((done) => {
+    testApp = setupApp();
+    httpServer = setupHttpServer(testApp);
+    agent = chai.request.agent(testApp);
+    attemptAuthentication(agent, done, Accounts.ADMIN);
+  });
+  after(() => {
+    httpServer.close();
+  });
+  it('should return error code 400 for blog post that is negative or NaN', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/draft/-1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Now has a title',
+        image_caption: 'Now has an image caption',
+        preview: 'Now has a preview',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminDraftNegativeOrNanInputError));
+        done();
+      });
+  });
+  it('should return error code 400 for invalid URL', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/draft/wow')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Now has a title',
+        image_caption: 'Now has an image caption',
+        preview: 'Now has a preview',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(400);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostAdminDraftNegativeOrNanInputError));
+        done();
+      });
+  });
+  it('should return error code 404 for blog post yet to be created', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/draft/55')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Now has a title',
+        image_caption: 'Now has an image caption',
+        preview: 'Now has a preview',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(404);
+        expect(res.text).to.deep.equal(JSON.stringify(blogPostDNEError));
+        done();
+      });
+  });
+  it('should edit a draft blog post by id unsuccessfully', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/draft/1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Now has a title',
+        image_caption: 'Now has an image caption',
+        preview: 'Now has a preview',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: ''
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('errors');
+        done();
+      });
+  });
+  it('should edit a draft blog post by id successfully', (done) => {
+    agent
+      .put('/api/v1/admin-blog-post/draft/1')
+      .set('content-type', 'application/json')
+      .send({
+        title: 'Now has a title',
+        image_caption: 'Now has an image caption',
+        preview: 'Now has a preview',
+        content: '',
+        is_draft: 0,
+        image_id: 1,
+        user_id: 1
+      })
+      .end((err: any, res: any) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.deep.property('id');
+        expect(res.body).to.have.deep.property('title');
+        expect(res.body).to.have.deep.property('author');
+        expect(res.body).to.have.deep.property('updated_at');
+        expect(res.body).to.have.deep.property('image_caption');
+        expect(res.body).to.have.deep.property('preview');
+        expect(res.body).to.have.deep.property('content');
+        expect(res.body).to.have.deep.property('is_draft');
+        expect(res.body).to.have.deep.property('image_id');
+        expect(res.body).to.have.deep.property('user_id');
+        expect(res.body.title).to.deep.equal('Now has a title');
+        expect(res.body.author).to.deep.equal('John Doe');
+        expect(res.body.image_caption).to.deep.equal('Now has an image caption');
+        expect(res.body.preview).to.deep.equal('Now has a preview');
+        expect(res.body.content).to.deep.equal('');
+        expect(res.body.is_draft).to.deep.equal(0);
+        expect(res.body.image_id).to.deep.equal(1);
+        expect(res.body.user_id).to.deep.equal(1);
+        done();
+      });
+  });
+});
+
+// Test 9: Remove a blog post by id
 describe('DELETE /api/v1/admin-blog-post/:id', () => {
   before((done) => {
     testApp = setupApp();
