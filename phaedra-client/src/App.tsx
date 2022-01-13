@@ -13,6 +13,7 @@ import Error404 from './pages/Public/Error404';
 import Dashboard from './pages/Admin/Dashboard';
 import Account from './pages/Admin/Account';
 import NewPost from './pages/Admin/NewPost';
+import EditPost from './pages/Admin/EditPost';
 import ManagePosts from './pages/Admin/ManagePosts';
 import PublicRoute from './hocs/PublicRoute';
 import AdminRoute from './hocs/AdminRoute';
@@ -32,6 +33,7 @@ const App = () => {
           <AdminRoute exact path="/admin" component={Dashboard} />
           <AdminRoute exact path="/admin/account" component={Account} />
           <AdminRoute exact path="/admin/new" component={NewPost} />
+          <AdminRoute exact path="/admin/edit/:blogID" component={EditPost} />
           <AdminRoute exact path="/admin/posts" component={ManagePosts} />
           <Route component={Error404} />
         </Switch>

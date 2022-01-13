@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 import { Container, Card } from 'react-bootstrap';
 import CenteredContainer from '../../components/Shared/CenteredContainer';
 import { BlogPostId, BlogPost } from '../../models/blogpost';
-import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { EditorState, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 import initialViewPost from '../../utils/json/initialViewPost.json';
 import { makeDateShort, makeTimeShort } from '../../utils/timezone';
 import Error404 from './Error404';
@@ -75,7 +76,7 @@ const ViewBlog = () => {
                 <Card.Text className="text-center text-muted view-post-image-caption">{blogPost.image_caption}</Card.Text>
               </Container>
               <Card.Text>
-                <Editor editorState={editorState} readOnly={true} onChange={onChangeHandler}></Editor>
+                <Editor toolbarHidden editorState={editorState} readOnly={true} onChange={onChangeHandler}></Editor>
               </Card.Text>
             </Card.Body>
           </Card>

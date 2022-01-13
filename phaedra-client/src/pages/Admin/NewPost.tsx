@@ -9,13 +9,14 @@ import CenteredContainer from '../../components/Shared/CenteredContainer';
 import { Container, Col, Form, Button } from 'react-bootstrap';
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import { BlogNewPost, BlogPostInput, modifyBlogPost } from '../../models/blogpost';
 import { UserContext } from '../../hooks/UserContext';
 import initialNewPost from '../../utils/json/initialNewPost.json';
 import { capitalize } from '../../utils/capitalizeString';
+import { BlogNewPost, BlogPostInput, modifyBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData } from '../../models/image';
 
 const NewPost = () => {
+  const ERROR_CODE: number = -1;
   let history = useHistory();
   const userContext = useContext(UserContext);
   const [uploadedImage, setUploadedImageState] = useState<string>('');
@@ -66,22 +67,22 @@ const NewPost = () => {
       return response.data.id;
     } catch (error: any) {
       toast.error('Error: '.concat(capitalize(error.response.data.error)));
-      return -1;
+      return ERROR_CODE;
     }
   };
 
   const handlePublish = async () => {
     if (validatePublishment()) return;
     const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
-    createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
+    if (imageId !== ERROR_CODE) await createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
   };
 
   const handleSaveAsDraft = async () => {
     if (uploadedImage.length < 1) {
-      createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, 1, userContext.user?.id as number));
+      await createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, 1, userContext.user?.id as number));
     } else {
       const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
-      createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
+      if (imageId !== ERROR_CODE) await createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
     }
   };
 

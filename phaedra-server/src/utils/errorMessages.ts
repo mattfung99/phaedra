@@ -19,5 +19,17 @@ const imageDNEError = dneError('image', 'does not exist');
 const imageMimetypeError = invalidExtension('image', 'png, jpg, jpeg');
 const blogPostNegativeOrNanInputError = negativeOrNanInputError('/api/v1/blog-post/:id');
 const blogPostDNEError = dneError('blog_post', 'does not exist');
+const blogPostAdminNegativeOrNanInputError = negativeOrNanInputError('/api/v1/admin-blog-post/:id');
+const blogPostAdminPublishNegativeOrNanInputError = negativeOrNanInputError('/api/v1/admin-blog-post/publish/:id');
+const blogPostAdminDraftNegativeOrNanInputError = negativeOrNanInputError('/api/v1/admin-blog-post/draft/:id');
 
-export { imageNegativeOrNanInputError, imageDNEError, imageMimetypeError, blogPostNegativeOrNanInputError, blogPostDNEError };
+export {
+  imageNegativeOrNanInputError,
+  imageDNEError,
+  imageMimetypeError,
+  blogPostNegativeOrNanInputError,
+  blogPostDNEError,
+  blogPostAdminNegativeOrNanInputError,
+  blogPostAdminPublishNegativeOrNanInputError,
+  blogPostAdminDraftNegativeOrNanInputError
+};

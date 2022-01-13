@@ -11,3 +11,9 @@ export const createConfigurationContentType = (): object => {
     }
   };
 };
+
+export const deleteBlogPostImage = (): object => {
+  return {
+    FLAG_TESTING: false
+  };
+};

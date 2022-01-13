@@ -7,9 +7,9 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       author: 'John Doe',
       image_caption: 'Blog photo of the first post here!',
       preview: 'This is a preview of the first post',
-      content: '',
+      content: '{"blocks":[{"key":"12aaa","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
       is_draft: false,
-      image_id: 1,
+      image_id: 2,
       user_id: 1
     },
     {
@@ -17,9 +17,9 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       author: 'John Doe',
       image_caption: 'Blog photo of the second post here!',
       preview: 'This is a preview of the second post',
-      content: '',
+      content: '{"blocks":[{"key":"12aab","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
       is_draft: true,
-      image_id: 2,
+      image_id: 3,
       user_id: 1
     },
     {
@@ -27,9 +27,9 @@ export const insertBlogPosts = async (knex: Knex): Promise<void> => {
       author: 'Jane Doe',
       image_caption: 'Blog photo of the third post here!',
       preview: 'This is a preview of the third post',
-      content: '',
+      content: '{"blocks":[{"key":"12aac","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
       is_draft: false,
-      image_id: 3,
+      image_id: 4,
       user_id: 2
     }
   ]);

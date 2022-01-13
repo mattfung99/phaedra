@@ -19,4 +19,6 @@ const blogPostDraft = [
   check('user_id').trim().escape().notEmpty().isNumeric().withMessage(msgNumber)
 ];
 
-export { blogPostPublish as registerBlogPostPublish, blogPostDraft as registerBlogPostDraft };
+const blogPostDelete = [check('FLAG_TESTING').trim().escape().notEmpty().isBoolean().withMessage(msgBoolean)];
+
+export { blogPostPublish as registerBlogPostPublish, blogPostDraft as registerBlogPostDraft, blogPostDelete as registerBlogPostDelete };
