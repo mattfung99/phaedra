@@ -14,10 +14,11 @@ import initialNewPost from '../../utils/json/initialNewPost.json';
 import initialEditPost from '../../utils/json/initialEditPost.json';
 import { capitalize } from '../../utils/capitalizeString';
 import { BlogNewPost, BlogPostInput, modifyBlogPost, BlogPostId, AdminBlogPost } from '../../models/blogpost';
-import { createConfigurationContentType, createFormData } from '../../models/image';
+import { createConfigurationContentType, createFormData, deleteBlogPostImage } from '../../models/image';
 import Error404 from '../Public/Error404';
 
 const EditPost = () => {
+  const ERROR_CODE: number = -1;
   let history = useHistory();
   const userContext = useContext(UserContext);
   const { blogID } = useParams<BlogPostId>();
@@ -35,7 +36,7 @@ const EditPost = () => {
   }, []);
 
   const validatePublishment = () => {
-    if (uploadedImage.length < 1) {
+    if (uploadedImage.length < 1 && post.image_id === 1) {
       toast.error('Error: No image selected!');
       return true;
     }
@@ -68,12 +69,11 @@ const EditPost = () => {
     }
   };
 
-  const createBlogPost = async (newBlogPost: BlogPostInput) => {
-    const url = `/api/v1/admin-blog-post/${newBlogPost.is_draft ? 'draft' : 'publish'}`;
+  const editBlogPost = async (newBlogPost: BlogPostInput) => {
+    const url = `/api/v1/admin-blog-post/${newBlogPost.is_draft ? 'draft' : 'publish'}/${post.id}`;
     try {
-      await httpService.post(url, newBlogPost);
-      toast.success(`Successfully created a ${newBlogPost.is_draft ? 'draft' : 'published'} blog post!`);
-      history.push('/admin/posts');
+      await httpService.put(url, newBlogPost);
+      toast.success(`Successfully edited a ${newBlogPost.is_draft ? 'draft' : 'published'} blog post!`);
     } catch (error: any) {
       const errorBody = error.response.data.errors[0];
       toast.error(capitalize(errorBody.param).concat(': ').concat(errorBody.msg));
@@ -87,23 +87,51 @@ const EditPost = () => {
       return response.data.id;
     } catch (error: any) {
       toast.error('Error: '.concat(capitalize(error.response.data.error)));
-      return -1;
+      return ERROR_CODE;
+    }
+  };
+
+  const deleteImage = async (imageId: number) => {
+    const url = `/api/v1/image/${imageId}`;
+    try {
+      await httpService.del(url, { data: deleteBlogPostImage() });
+    } catch (error: any) {
+      toast.error('Error: '.concat(capitalize(error.response.data.error)));
     }
   };
 
   const handlePublish = async () => {
     if (validatePublishment()) return;
-    const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
-    createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
+    if (uploadedImage.length < 1 && post.image_id !== 1) {
+      await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, post.image_id, userContext.user?.id as number));
+    } else {
+      const imageToDeleteId: number = post.image_id;
+      const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
+      if (imageId !== ERROR_CODE) await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
+      await deleteImage(imageToDeleteId);
+    }
+    history.push('/admin/posts');
   };
 
   const handleSaveAsDraft = async () => {
     if (uploadedImage.length < 1) {
-      createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, 1, userContext.user?.id as number));
+      if (post.image_id === 1) {
+        await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, 1, userContext.user?.id as number));
+      } else {
+        await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, post.image_id, userContext.user?.id as number));
+      }
     } else {
-      const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
-      createBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
+      if (post.image_id === 1) {
+        const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
+        await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
+      } else {
+        const imageToDeleteId: number = post.image_id;
+        const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
+        if (imageId !== ERROR_CODE) await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
+        await deleteImage(imageToDeleteId);
+      }
     }
+    history.push('/admin/posts');
   };
 
   const handleEditorChange = (state: EditorState) => {
