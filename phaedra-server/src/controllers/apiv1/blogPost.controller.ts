@@ -6,6 +6,7 @@ import { deleteUploadedImage } from 'utils/removeAssetImage';
 import userTemplate from './templates/getUser.controller';
 import { getItemById, getItems } from './templates/getTemplate.controller';
 import { createItem } from './templates/createTemplate.controller';
+import { editItemById } from './templates/editTemplate.controller';
 import { deleteItemById } from './templates/deleteTemplate.controller';
 import { AuthorName } from 'db/models/userInfo.model';
 import { Image } from 'db/models/image.model';
@@ -60,6 +61,13 @@ const createBlogPost = async (req: Request, res: Response, next: NextFunction) =
   await createItem(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, createInputtedReqBody(req, userId, author.first_name.concat(' ').concat(author.last_name)));
 };
 
+const editBlogPostById = async (req: Request, res: Response, next: NextFunction) => {
+  const blogPostId: number = +req.params.id;
+  const userId: number = +req.body.user_id;
+  const author: AuthorName = await userTemplate.findAuthor('user_id', userId);
+  await editItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, createInputtedReqBody(req, userId, author.first_name.concat(' ').concat(author.last_name)), blogPostId, 'id');
+};
+
 const deleteBlogPostById = async (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE_BLOG_POST, `DELETING A ${TABLE_BLOG_POST.toUpperCase()} BY ID`);
   const blogPostId: number = +req.params.id;
@@ -80,4 +88,4 @@ const deleteBlogPostById = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, getAdminBlogPostById, createBlogPost, deleteBlogPostById };
+export default { getBlogPosts, getAdminBlogPosts, getBlogPostById, getAdminBlogPostById, createBlogPost, editBlogPostById, deleteBlogPostById };
