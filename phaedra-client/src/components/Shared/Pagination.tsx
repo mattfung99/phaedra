@@ -7,15 +7,15 @@ interface Props {
 }
 
 const Pagination = ({ postsPerPage, totalPosts, paginate }: Props) => {
-  const pageNumbers = [];
+  const pageNumbers: number[] = [];
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
   }
 
   return (
     <Container>
-      <ul className="pagination justify-content-md-center">
-        {pageNumbers.map((number) => (
+      <ul className="pagination mx-auto justify-content-center">
+        {pageNumbers.map((number: number) => (
           <li key={number} className="page-item">
             <p onClick={() => paginate(number)} className="page-link">
               {number}
