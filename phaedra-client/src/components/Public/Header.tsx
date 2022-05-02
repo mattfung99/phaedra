@@ -9,7 +9,7 @@ const Header = () => {
           {/* <Navbar.Brand>Phaedra</Navbar.Brand> */}
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="m-auto">
+            <Nav className="m-auto text-center">
               <Nav.Link as={Link} to={'/'}>
                 Home
               </Nav.Link>
