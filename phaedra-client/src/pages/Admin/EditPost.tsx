@@ -108,7 +108,7 @@ const EditPost = () => {
       const imageToDeleteId: number = post.image_id;
       const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
       if (imageId !== ERROR_CODE) await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
-      await deleteImage(imageToDeleteId);
+      if (imageToDeleteId !== 1) await deleteImage(imageToDeleteId);
     }
     history.push('/admin/posts');
   };
