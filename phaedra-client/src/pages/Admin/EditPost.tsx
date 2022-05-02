@@ -13,6 +13,7 @@ import { UserContext } from '../../hooks/UserContext';
 import initialNewPost from '../../utils/json/initialNewPost.json';
 import initialEditPost from '../../utils/json/initialEditPost.json';
 import { capitalize } from '../../utils/capitalizeString';
+import { imageCompressor } from '../../utils/imageCompressor';
 import { BlogNewPost, BlogPostInput, modifyBlogPost, BlogPostId, AdminBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData, deleteBlogPostImage } from '../../models/image';
 import { ERROR_CODE, DEFAULT_IMAGE_ID } from '../../constants/codes';
@@ -159,8 +160,8 @@ const EditPost = () => {
     }
   };
 
-  const validateImageExtension = (event: any) => {
-    setUploadedImageState(event.target.files[0]);
+  const handleFileUpload = (file: any) => {
+    setUploadedImageState(file);
   };
 
   useEffect(() => {
@@ -183,7 +184,14 @@ const EditPost = () => {
                   </Form.Group>
                   <Form.Group className="mb-2">
                     <Form.Label>Post Title Image</Form.Label>
-                    <Form.Control accept="image/jpg, image/jpeg, image/png" type="file" name="image" id="image" onChange={validateImageExtension} size="sm" />
+                    <Form.Control
+                      accept="image/jpg, image/jpeg, image/png"
+                      type="file"
+                      name="image"
+                      id="image"
+                      onChange={(event: any) => imageCompressor(event.target.files[0], handleFileUpload)}
+                      size="sm"
+                    />
                     <Form.Text className="form-image-notifier">
                       {post.image_id === DEFAULT_IMAGE_ID ? 'No photo was previously uploaded in this draft' : `Previously uploaded ${post.filename.substring(post.filename.indexOf('_') + 1)}`}
                     </Form.Text>

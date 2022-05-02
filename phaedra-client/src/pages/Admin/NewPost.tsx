@@ -12,6 +12,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { UserContext } from '../../hooks/UserContext';
 import initialNewPost from '../../utils/json/initialNewPost.json';
 import { capitalize } from '../../utils/capitalizeString';
+import { imageCompressor } from '../../utils/imageCompressor';
 import { BlogNewPost, BlogPostInput, modifyBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData } from '../../models/image';
 import { ERROR_CODE } from '../../constants/codes';
@@ -111,8 +112,8 @@ const NewPost = () => {
     }
   };
 
-  const validateImageExtension = (event: any) => {
-    setUploadedImageState(event.target.files[0]);
+  const handleFileUpload = (file: any) => {
+    setUploadedImageState(file);
   };
 
   return (
@@ -129,7 +130,14 @@ const NewPost = () => {
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Title Image</Form.Label>
-                <Form.Control accept="image/jpg, image/jpeg, image/png" type="file" name="image" id="image" onChange={validateImageExtension} size="sm" />
+                <Form.Control
+                  accept="image/jpg, image/jpeg, image/png"
+                  type="file"
+                  name="image"
+                  id="image"
+                  onChange={(event: any) => imageCompressor(event.target.files[0], handleFileUpload)}
+                  size="sm"
+                />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Post Title Image Caption</Form.Label>
