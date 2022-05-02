@@ -23,4 +23,6 @@ const del = (url: string, config: object = {}) => {
   return axios.delete(baseApiUrl + url, config);
 };
 
-export default { get, post, put, patch, del };
+const httpService = { get, post, put, patch, del };
+
+export default httpService;

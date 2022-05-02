@@ -10,6 +10,7 @@ import { editItemById } from './templates/editTemplate.controller';
 import { deleteItemById } from './templates/deleteTemplate.controller';
 import { AuthorName } from 'db/models/userInfo.model';
 import { Image } from 'db/models/image.model';
+import { DEFAULT_IMAGE_ID } from 'constants/codes';
 import { BlogPost } from 'db/models/blogPost.model';
 
 const queryAllBlogPostsByDesc = () => {
@@ -76,7 +77,7 @@ const deleteBlogPostById = async (req: Request, res: Response, next: NextFunctio
     const retrievedBlogPost: BlogPost = await Knex.select('*').from(TABLE_BLOG_POST).where('id', blogPostId).first();
     const imageId: number = retrievedBlogPost.image_id;
     const retrievedBlogPostById: BlogPost = (await deleteItemById(req, res, next, NAMESPACE_BLOG_POST, TABLE_BLOG_POST, blogPostId)) as BlogPost;
-    if (imageId !== 1) {
+    if (imageId !== DEFAULT_IMAGE_ID) {
       const retrievedImageById: Image = (await deleteItemById(req, res, next, NAMESPACE_IMAGE, TABLE_IMAGE, imageId)) as Image;
       if (!FLAG_TESTING) deleteUploadedImage(NAMESPACE_IMAGE, '/home/node/app/'.concat(retrievedImageById.filepath));
       logging.info(NAMESPACE_IMAGE, `DELETED ${TABLE_IMAGE.toUpperCase()} WITH ID ${imageId} AND FILE PATH`, retrievedImageById);

@@ -15,10 +15,10 @@ import initialEditPost from '../../utils/json/initialEditPost.json';
 import { capitalize } from '../../utils/capitalizeString';
 import { BlogNewPost, BlogPostInput, modifyBlogPost, BlogPostId, AdminBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData, deleteBlogPostImage } from '../../models/image';
+import { ERROR_CODE, DEFAULT_IMAGE_ID } from '../../constants/codes';
 import Error404 from '../Public/Error404';
 
 const EditPost = () => {
-  const ERROR_CODE: number = -1;
   let history = useHistory();
   const userContext = useContext(UserContext);
   const { blogID } = useParams<BlogPostId>();
@@ -36,7 +36,7 @@ const EditPost = () => {
   }, []);
 
   const validatePublishment = () => {
-    if (uploadedImage.length < 1 && post.image_id === 1) {
+    if (uploadedImage.length < 1 && post.image_id === DEFAULT_IMAGE_ID) {
       toast.error('Error: No image selected!');
       return true;
     }
@@ -108,20 +108,20 @@ const EditPost = () => {
       const imageToDeleteId: number = post.image_id;
       const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
       if (imageId !== ERROR_CODE) await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 0, imageId, userContext.user?.id as number));
-      await deleteImage(imageToDeleteId);
+      if (imageToDeleteId !== 1) await deleteImage(imageToDeleteId);
     }
     history.push('/admin/posts');
   };
 
   const handleSaveAsDraft = async () => {
     if (uploadedImage.length < 1) {
-      if (post.image_id === 1) {
+      if (post.image_id === DEFAULT_IMAGE_ID) {
         await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, 1, userContext.user?.id as number));
       } else {
         await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, post.image_id, userContext.user?.id as number));
       }
     } else {
-      if (post.image_id === 1) {
+      if (post.image_id === DEFAULT_IMAGE_ID) {
         const imageId = await createImage(createFormData(uploadedImage), createConfigurationContentType());
         await editBlogPost(modifyBlogPost(values, JSON.stringify(convertToRaw(editorState.getCurrentContent())), 1, imageId, userContext.user?.id as number));
       } else {
@@ -185,7 +185,7 @@ const EditPost = () => {
                     <Form.Label>Post Title Image</Form.Label>
                     <Form.Control accept="image/jpg, image/jpeg, image/png" type="file" name="image" id="image" onChange={validateImageExtension} size="sm" />
                     <Form.Text className="form-image-notifier">
-                      {post.image_id === 1 ? 'No photo was previously uploaded in this draft' : `Previously uploaded ${post.filename.substring(post.filename.indexOf('_') + 1)}`}
+                      {post.image_id === DEFAULT_IMAGE_ID ? 'No photo was previously uploaded in this draft' : `Previously uploaded ${post.filename.substring(post.filename.indexOf('_') + 1)}`}
                     </Form.Text>
                   </Form.Group>
                   <Form.Group className="mb-2">

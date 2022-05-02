@@ -14,9 +14,9 @@ import initialNewPost from '../../utils/json/initialNewPost.json';
 import { capitalize } from '../../utils/capitalizeString';
 import { BlogNewPost, BlogPostInput, modifyBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData } from '../../models/image';
+import { ERROR_CODE } from '../../constants/codes';
 
 const NewPost = () => {
-  const ERROR_CODE: number = -1;
   let history = useHistory();
   const userContext = useContext(UserContext);
   const [uploadedImage, setUploadedImageState] = useState<string>('');
