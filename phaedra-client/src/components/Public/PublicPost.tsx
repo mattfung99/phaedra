@@ -42,7 +42,7 @@ const PublicPost = ({ data }: Props) => {
     <React.Fragment>
       <Card border="secondary" className="public-post-spacing" onClick={handleOnClick}>
         <Card.Body className="public-post-body">
-          <Container className="justify-content-md-center row">
+          <Container className="public-post-image-container">
             <Card.Img className="public-post-image img-thumbnail" variant="top" src={blogPostImage} />
           </Container>
           <Container>
