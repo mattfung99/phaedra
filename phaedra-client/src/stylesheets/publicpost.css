@@ -8,9 +8,14 @@
 }
 
 .public-post-image {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.public-post-image-container {
   height: 200px;
-  object-fit: contain;
-  width: 500px;
+  width: 100%;
 }
 
 .public-post-spacing {
