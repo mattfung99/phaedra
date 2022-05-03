@@ -9,17 +9,17 @@ import AdminPost from '../../components/Admin/AdminPost';
 import Pagination from '../../components/Shared/Pagination';
 import ModalDeleteBlogPost from '../../components/Admin/ModalDeleteBlogPost';
 import { BlogPostAdminList, deleteBlogPost } from '../../models/blogpost';
+import { DEFAULT_INDEX } from '../../constants/codes';
 import { capitalize } from '../../utils/capitalizeString';
 
 const ManagePosts = () => {
-  let history = useHistory();
-  const DEFAULT_INDEX: number = 0;
+  const history = useHistory();
   const [posts, setPosts] = useState<BlogPostAdminList[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(5);
-  const lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = posts.slice(firstPostIndex, lastPostIndex);
+  const lastPostIndex: number = currentPage * postsPerPage;
+  const firstPostIndex: number = lastPostIndex - postsPerPage;
+  const currentPosts: BlogPostAdminList[] = posts.slice(firstPostIndex, lastPostIndex);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   const [currentIndex, setCurrentIndex] = useState<number>(DEFAULT_INDEX);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);

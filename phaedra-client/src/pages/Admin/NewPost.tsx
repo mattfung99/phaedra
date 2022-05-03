@@ -18,7 +18,7 @@ import { createConfigurationContentType, createFormData } from '../../models/ima
 import { ERROR_CODE } from '../../constants/codes';
 
 const NewPost = () => {
-  let history = useHistory();
+  const history = useHistory();
   const userContext = useContext(UserContext);
   const [uploadedImage, setUploadedImageState] = useState<string>('');
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());

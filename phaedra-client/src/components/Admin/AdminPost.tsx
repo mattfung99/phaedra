@@ -3,6 +3,7 @@ import { Button, Badge } from 'react-bootstrap';
 import { BlogPostAdminList } from '../../models/blogpost';
 import '../../stylesheets/manageposts.css';
 import { makeDateShort } from '../../utils/timezone';
+import { parseEscapedCharacters } from '../../utils/parseEscapedCharacters';
 
 interface Props {
   data: BlogPostAdminList;
@@ -17,10 +18,10 @@ const AdminPost = ({ data, onEditBlogPost, onDeleteBlogPost }: Props) => {
         <tr>
           <td>{data.is_draft ? <Badge bg="warning">{'Draft'}</Badge> : <Badge bg="success">{'Published'}</Badge>}</td>
           <td>
-            <strong>{data.title}</strong>
+            <strong>{parseEscapedCharacters(data.title)}</strong>
           </td>
-          <td>{data.preview}</td>
-          <td>{data.author}</td>
+          <td>{parseEscapedCharacters(data.preview)}</td>
+          <td>{parseEscapedCharacters(data.author)}</td>
           <td>{makeDateShort(data.updated_at)}</td>
           <td>
             <Button

@@ -15,10 +15,10 @@ import { currYear } from '../../utils/timezone';
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState<boolean>(false);
   const showSidebar = () => setSidebar(!sidebar);
-  let history = useHistory();
+  const history = useHistory();
   const userContext = useContext(UserContext);
   const onClickLogoutHandler = async () => {
-    await userContext.logout();
+    userContext.logout();
     toast.success('Successfully logged out!');
     history.push('/');
   };

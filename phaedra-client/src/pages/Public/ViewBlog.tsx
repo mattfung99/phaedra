@@ -12,6 +12,7 @@ import { BlogPostId, BlogPost } from '../../models/blogpost';
 import { EditorState, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import initialViewPost from '../../utils/json/initialViewPost.json';
+import { parseEscapedCharacters } from '../../utils/parseEscapedCharacters';
 import { makeDateShort, makeTimeShort } from '../../utils/timezone';
 import Error404 from './Error404';
 
@@ -66,14 +67,14 @@ const ViewBlog = () => {
           <Header />
           <Card border="secondary" className="view-post-body">
             <Card.Body>
-              <Card.Title className="text-center view-post-title">{blogPost.title}</Card.Title>
-              <Card.Text className="text-center view-post-preview">{blogPost.preview}</Card.Text>
+              <Card.Title className="text-center view-post-title">{parseEscapedCharacters(blogPost.title)}</Card.Title>
+              <Card.Text className="text-center view-post-preview">{parseEscapedCharacters(blogPost.preview)}</Card.Text>
               <Card.Subtitle className="text-muted view-post-author">
                 {blogPost.author.concat(' | ').concat('Updated ').concat(makeTimeShort(blogPost.updated_at)).concat(', ').concat(makeDateShort(blogPost.updated_at))}
               </Card.Subtitle>
               <Container className="justify-content-md-center row view-post-container">
                 <Card.Img className="view-post-image" variant="top" src={blogPostImage} />
-                <Card.Text className="text-center text-muted view-post-image-caption">{blogPost.image_caption}</Card.Text>
+                <Card.Text className="text-center text-muted view-post-image-caption">{parseEscapedCharacters(blogPost.image_caption)}</Card.Text>
               </Container>
               <Card.Text>
                 <Editor toolbarHidden editorState={editorState} readOnly={true} onChange={onChangeHandler}></Editor>
