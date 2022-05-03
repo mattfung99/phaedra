@@ -12,7 +12,7 @@ import Footer from '../../components/Public/Footer';
 import initialLogin from '../../utils/json/initialLogin.json';
 
 const Login = () => {
-  let history = useHistory();
+  const history = useHistory();
   let userContext = useContext(UserContext);
   const [values, setValue] = useState<UserCredentials>(initialLogin);
 

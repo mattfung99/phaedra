@@ -14,9 +14,9 @@ const Blog = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPostList[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [postsPerPage] = useState<number>(5);
-  const lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = blogPosts.slice(firstPostIndex, lastPostIndex);
+  const lastPostIndex: number = currentPage * postsPerPage;
+  const firstPostIndex: number = lastPostIndex - postsPerPage;
+  const currentPosts: BlogPostList[] = blogPosts.slice(firstPostIndex, lastPostIndex);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   useEffect(() => {

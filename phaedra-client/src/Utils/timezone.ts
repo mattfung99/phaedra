@@ -25,11 +25,11 @@ const formattedDate = (date: string, day: number): string => {
   return Month[parseInt(date.substring(5, 7)) - 1].concat(' ').concat(date.substring(day, 10)).concat(', ').concat(date.substring(0, 4));
 };
 
-export const makeDateShort = (date: string): string => {
+const makeDateShort = (date: string): string => {
   return parseInt(date.substring(8, 9)) > 0 ? formattedDate(date, 8) : formattedDate(date, 9);
 };
 
-export const makeTimeShort = (date: string): string => {
+const makeTimeShort = (date: string): string => {
   return parseInt(date.substring(11, 13)) > 12
     ? (parseInt(date.substring(11, 13)) - 12).toString().concat(date.substring(13, 16)).concat(' PM')
     : parseInt(date.substring(11, 12)) > 0
@@ -37,4 +37,4 @@ export const makeTimeShort = (date: string): string => {
     : date.substring(12, 16).concat(' AM');
 };
 
-export { Month, currDate, currMonth, currYear, currMonthLastDay, currMonthLastDate };
+export { Month, currDate, currMonth, currYear, currMonthLastDay, currMonthLastDate, makeDateShort, makeTimeShort };

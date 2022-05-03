@@ -14,13 +14,14 @@ import initialNewPost from '../../utils/json/initialNewPost.json';
 import initialEditPost from '../../utils/json/initialEditPost.json';
 import { capitalize } from '../../utils/capitalizeString';
 import { imageCompressor } from '../../utils/imageCompressor';
+import { parseEscapedCharacters } from '../../utils/parseEscapedCharacters';
 import { BlogNewPost, BlogPostInput, modifyBlogPost, BlogPostId, AdminBlogPost } from '../../models/blogpost';
 import { createConfigurationContentType, createFormData, deleteBlogPostImage } from '../../models/image';
 import { ERROR_CODE, DEFAULT_IMAGE_ID } from '../../constants/codes';
 import Error404 from '../Public/Error404';
 
 const EditPost = () => {
-  let history = useHistory();
+  const history = useHistory();
   const userContext = useContext(UserContext);
   const { blogID } = useParams<BlogPostId>();
   const [isFetched, setIsFetched] = useState<boolean>(true);
@@ -60,9 +61,9 @@ const EditPost = () => {
       const response: any = await httpService.get(url);
       setPost(response.data);
       setValue({
-        title: response.data.title,
-        imageCaption: response.data.image_caption,
-        preview: response.data.preview
+        title: parseEscapedCharacters(response.data.title),
+        imageCaption: parseEscapedCharacters(response.data.image_caption),
+        preview: parseEscapedCharacters(response.data.preview)
       });
       setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.content))));
     } catch (error) {
