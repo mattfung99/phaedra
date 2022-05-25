@@ -2,28 +2,29 @@ import { UserCredentials } from '../models/user';
 import httpService from './httpService';
 
 const authenticationService = {
-  login: (user: UserCredentials): Promise<any> => {
-    return httpService
-      .post('/api/v1/auth/login', user)
-      .then((res) => res.data)
-      .catch((error) => {
-        if (error.response) {
-          return error.response.data;
-        }
-      });
+  login: async (user: UserCredentials): Promise<any> => {
+    try {
+      const res = await httpService.post('/api/v1/auth/login', user);
+      return res.data;
+    } catch (error: any) {
+      if (error.response) {
+        return error.response.data;
+      }
+    }
   },
 
-  logout: (): Promise<any> => {
-    return httpService.get('/api/v1/auth/logout').then((res) => res.data);
+  logout: async (): Promise<any> => {
+    const res = await httpService.get('/api/v1/auth/logout');
+    return res.data;
   },
 
-  isAuthenticated: (): Promise<any> => {
-    return httpService
-      .get('/api/v1/auth/authenticate')
-      .then((res) => res.data)
-      .catch((error) => {
-        return { isAuthenticated: false, user: null };
-      });
+  isAuthenticated: async (): Promise<any> => {
+    try {
+      const res = await httpService.get('/api/v1/auth/authenticate');
+      return res.data;
+    } catch (error) {
+      return { isAuthenticated: false, user: null };
+    }
   }
 };
 
