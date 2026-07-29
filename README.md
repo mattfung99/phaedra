@@ -17,30 +17,39 @@ public site is pre-rendered to static HTML for SEO.
 
 ## Local development
 
+**One command (recommended)** — boots a local Supabase stack, wires its
+credentials into `.env.development.local`, seeds a dev admin + sample posts, and
+starts Vite. Requires **Docker** + the **Supabase CLI**
+(`brew install supabase/tap/supabase`):
+
+```bash
+npm install
+npm run dev:local        # → admin@example.com / password123, Studio :54323
+npm run stop:local       # tear down the Supabase stack
+```
+
+**Against your real project (or no backend):**
+
 ```bash
 cp .env.example .env.local   # fill in your Supabase URL + anon key
 npm install
 npm run dev
 ```
 
-Without a Supabase project the app still runs — data calls short-circuit to empty.
+Without any Supabase config the app still runs — data calls short-circuit to empty.
+`dev:local` writes to `.env.development.local` (dev-only), so it never clobbers the
+prod `.env.local` your builds use.
 
-For an isolated database to test writes/admin flows (instead of touching prod),
-run a **local Supabase** stack and point `.env.local` at it:
-
-```bash
-supabase start          # applies migrations + serves the Edge Functions locally
-supabase status         # copy API URL + anon key into .env.local
-```
-
-CI's `e2e` job does exactly this on every PR (seeds a test admin + post, then runs
-the full Playwright suite), so nothing in CI touches production.
+CI's `e2e` job stands up the same local stack on every PR (seeds admin + posts,
+runs the full Playwright suite), so nothing in CI touches production.
 
 ### Scripts
 
 | Script                    | What                             |
 | ------------------------- | -------------------------------- |
 | `npm run dev`             | Vite dev server                  |
+| `npm run dev:local`       | Local Supabase + seed + Vite     |
+| `npm run stop:local`      | Stop the local Supabase stack    |
 | `npm run build`           | Typecheck + SSG build to `dist/` |
 | `npm run preview`         | Serve the built site             |
 | `npm run lint` / `format` | oxlint / prettier                |

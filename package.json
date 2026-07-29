@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "node scripts/dev-local.mjs",
+    "stop:local": "supabase stop",
     "build": "tsc -b && vite-react-ssg build && node scripts/postbuild.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
