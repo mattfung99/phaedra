@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: yarn
       - if: steps.cfg.outputs.ready == 'true'
         run: corepack enable
       - if: steps.cfg.outputs.ready == 'true'
