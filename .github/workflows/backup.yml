@@ -25,9 +25,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
       - if: steps.cfg.outputs.ready == 'true'
-        run: npm ci
+        run: corepack enable
+      - if: steps.cfg.outputs.ready == 'true'
+        run: yarn install --immutable
       - if: steps.cfg.outputs.ready == 'true'
         run: node scripts/backup.mjs
         env:

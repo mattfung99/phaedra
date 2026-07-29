@@ -18,12 +18,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
+      - run: corepack enable
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: yarn install --immutable
+      - run: yarn playwright install --with-deps chromium
 
       - name: Start local Supabase (applies migrations, serves functions)
         run: supabase start
@@ -48,7 +48,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ steps.sb.outputs.url }}
           VITE_SUPABASE_ANON_KEY: ${{ steps.sb.outputs.anon }}
-        run: npm run build
+        run: yarn build
 
       - name: Assert SSG pre-rendered the seeded post
         run: |
@@ -58,7 +58,7 @@ jobs:
           echo "SSG baked the seeded post ✓"
 
       - name: Run Playwright
-        run: npm run test:e2e
+        run: yarn test:e2e
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
