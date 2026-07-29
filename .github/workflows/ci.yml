@@ -33,4 +33,6 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - run: deno test -A supabase/functions/_shared/
+      # --node-modules-dir=auto so Deno auto-installs the npm deps (sanitize-html)
+      # regardless of CWD-based config discovery.
+      - run: deno test -A --node-modules-dir=auto supabase/functions/_shared/
