@@ -1,0 +1,7 @@
+dist
+coverage
+node_modules
+.vite-react-ssg-temp
+package-lock.json
+playwright-report
+test-results
