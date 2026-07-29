@@ -1,25 +1,21 @@
 import { test, expect } from '@playwright/test'
 
-// Full authoring lifecycle against a LIVE staging Supabase. Skips unless creds are
-// provided (so it no-ops locally and runs in the staging e2e job).
+// Full authoring lifecycle against a LIVE Supabase (local stack in CI). Skips
+// unless creds are provided. Verifies the write path via the admin list, which
+// fetches live (react-query) — a freshly created post isn't on the public SSG
+// site until a rebuild, so we don't assert public rendering here (see
+// public-post.spec.ts for the pre-rendered path).
 const email = process.env.E2E_ADMIN_EMAIL
 const password = process.env.E2E_ADMIN_PASSWORD
-
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
 
 test.describe('admin post lifecycle', () => {
   test.skip(
     !email || !password,
-    'requires E2E_ADMIN_EMAIL/E2E_ADMIN_PASSWORD + a live staging Supabase',
+    'requires E2E_ADMIN_EMAIL/E2E_ADMIN_PASSWORD + a live Supabase',
   )
 
-  test('login → create → publish → view → edit → delete', async ({ page }) => {
+  test('login → create → publish → edit → delete', async ({ page }) => {
     const title = `E2E Post ${Date.now()}`
-    const slug = slugify(title)
 
     // Sign in
     await page.goto('login')
@@ -35,19 +31,12 @@ test.describe('admin post lifecycle', () => {
     await page.keyboard.type('Hello from the e2e suite.')
     await page.getByRole('button', { name: 'Publish' }).click()
     await expect(page).toHaveURL(/\/admin\/posts$/)
-    await expect(page.locator('li', { hasText: title })).toBeVisible()
-
-    // Public page renders the (sanitized) content
-    await page.goto(`blog/${slug}`)
-    await expect(page.getByRole('heading', { name: title })).toBeVisible()
-    await expect(page.getByText('Hello from the e2e suite.')).toBeVisible()
+    const row = page.locator('li', { hasText: title })
+    await expect(row).toBeVisible()
+    await expect(row.getByText('Published')).toBeVisible()
 
     // Edit
-    await page.goto('admin/posts')
-    await page
-      .locator('li', { hasText: title })
-      .getByRole('link', { name: 'Edit' })
-      .click()
+    await row.getByRole('link', { name: 'Edit' }).click()
     await expect(page).toHaveURL(/\/admin\/edit\//)
     const edited = `${title} (edited)`
     await page.getByLabel('Title').fill(edited)

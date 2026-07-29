@@ -4,27 +4,55 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Runs the full suite (incl. the admin write-path + public SSG render) against an
+# ephemeral LOCAL Supabase stack — same Postgres/RLS/Edge Functions as prod, but
+# free and isolated, so nothing touches the production project.
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    # Runs against the staging Supabase project so specs never touch prod data.
-    environment: staging
+    env:
+      E2E_ADMIN_EMAIL: admin@example.com
+      E2E_ADMIN_PASSWORD: e2e-password-123
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run build
+
+      - name: Start local Supabase (applies migrations, serves functions)
+        run: supabase start
+
+      - name: Capture local credentials
+        id: sb
+        run: |
+          STATUS=$(supabase status -o json)
+          echo "url=$(echo "$STATUS" | jq -r '.API_URL')" >> "$GITHUB_OUTPUT"
+          echo "anon=$(echo "$STATUS" | jq -r '.ANON_KEY')" >> "$GITHUB_OUTPUT"
+          SERVICE=$(echo "$STATUS" | jq -r '.SERVICE_ROLE_KEY')
+          echo "::add-mask::$SERVICE"
+          echo "service=$SERVICE" >> "$GITHUB_OUTPUT"
+
+      - name: Seed admin user + published post
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-      - run: npm run test:e2e
+          SUPABASE_URL: ${{ steps.sb.outputs.url }}
+          SUPABASE_SERVICE_ROLE: ${{ steps.sb.outputs.service }}
+        run: node scripts/seed-e2e-user.mjs
+
+      - name: Build against local Supabase
         env:
-          E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
-          E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ steps.sb.outputs.url }}
+          VITE_SUPABASE_ANON_KEY: ${{ steps.sb.outputs.anon }}
+        run: npm run build
+
+      - name: Run Playwright
+        run: npm run test:e2e
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

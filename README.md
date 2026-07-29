@@ -25,6 +25,17 @@ npm run dev
 
 Without a Supabase project the app still runs — data calls short-circuit to empty.
 
+For an isolated database to test writes/admin flows (instead of touching prod),
+run a **local Supabase** stack and point `.env.local` at it:
+
+```bash
+supabase start          # applies migrations + serves the Edge Functions locally
+supabase status         # copy API URL + anon key into .env.local
+```
+
+CI's `e2e` job does exactly this on every PR (seeds a test admin + post, then runs
+the full Playwright suite), so nothing in CI touches production.
+
 ### Scripts
 
 | Script                    | What                             |
