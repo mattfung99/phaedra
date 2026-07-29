@@ -11,16 +11,30 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - id: cfg
+        env:
+          SUPABASE_SERVICE_ROLE: ${{ secrets.SUPABASE_SERVICE_ROLE }}
+        run: |
+          if [ -n "$SUPABASE_SERVICE_ROLE" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SUPABASE_SERVICE_ROLE not set — skipping backup"
+          fi
+      - if: steps.cfg.outputs.ready == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
-      - run: node scripts/backup.mjs
+      - if: steps.cfg.outputs.ready == 'true'
+        run: npm ci
+      - if: steps.cfg.outputs.ready == 'true'
+        run: node scripts/backup.mjs
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE: ${{ secrets.SUPABASE_SERVICE_ROLE }}
-      - uses: actions/upload-artifact@v4
+      - if: steps.cfg.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
         with:
           name: phaedra-backup-${{ github.run_id }}
           path: backup/
