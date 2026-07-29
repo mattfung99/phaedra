@@ -30,22 +30,42 @@ if (userErr && !/already|registered|exists/i.test(userErr.message)) {
   process.exit(1)
 }
 
-// Public post the build will pre-render (see e2e/public-post.spec.ts).
-const { error: postErr } = await admin.from('posts').upsert(
+// Published posts the build will pre-render. `e2e-welcome` is kept newest so the
+// e2e assertions (see e2e/public-post.spec.ts) stay stable; the rest give local
+// dev a populated blog list + pagination. `daysAgo` orders them.
+const now = Date.now()
+const samples = [
   {
     title: 'E2E Welcome',
     slug: 'e2e-welcome',
-    author_name: 'E2E Admin',
-    content: '<p>Welcome from the e2e suite.</p>',
     preview: 'Seeded published post.',
-    is_draft: false,
-    published_at: new Date().toISOString(),
+    content: '<p>Welcome from the e2e suite.</p>',
+    daysAgo: 0,
   },
+  ...Array.from({ length: 5 }, (_, i) => ({
+    title: `Sample Post ${i + 1}`,
+    slug: `sample-post-${i + 1}`,
+    preview: `Sample post number ${i + 1} for local development.`,
+    content: `<p>This is sample post ${i + 1}.</p><p>Replace or delete it.</p>`,
+    daysAgo: i + 1,
+  })),
+]
+
+const { error: postErr } = await admin.from('posts').upsert(
+  samples.map((s) => ({
+    title: s.title,
+    slug: s.slug,
+    author_name: 'E2E Admin',
+    content: s.content,
+    preview: s.preview,
+    is_draft: false,
+    published_at: new Date(now - s.daysAgo * 86_400_000).toISOString(),
+  })),
   { onConflict: 'slug' },
 )
 if (postErr) {
-  console.error('seed post failed:', postErr.message)
+  console.error('seed posts failed:', postErr.message)
   process.exit(1)
 }
 
-console.log('seeded e2e admin user + published post')
+console.log(`seeded admin user + ${samples.length} published posts`)
