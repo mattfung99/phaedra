@@ -11,7 +11,8 @@ test.describe('public SSG post', () => {
   )
 
   test('renders the seeded post at its slug', async ({ page }) => {
-    await page.goto('blog/e2e-welcome')
+    // Trailing slash = the canonical nested URL, served as the pre-rendered file.
+    await page.goto('blog/e2e-welcome/')
     await expect(
       page.getByRole('heading', { name: 'E2E Welcome' }),
     ).toBeVisible()

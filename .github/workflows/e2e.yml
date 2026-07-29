@@ -50,6 +50,13 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ steps.sb.outputs.anon }}
         run: npm run build
 
+      - name: Assert SSG pre-rendered the seeded post
+        run: |
+          test -f dist/blog/e2e-welcome/index.html
+          grep -q "E2E Welcome" dist/blog/e2e-welcome/index.html
+          grep -q "Welcome from the e2e suite." dist/blog/e2e-welcome/index.html
+          echo "SSG baked the seeded post ✓"
+
       - name: Run Playwright
         run: npm run test:e2e
 
