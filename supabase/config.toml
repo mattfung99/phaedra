@@ -1,0 +1,15 @@
+# Supabase CLI config. Link with: supabase link --project-ref <ref>
+# Migrations are the source of truth, applied via the migrations.yml workflow
+# (supabase db push) — the dashboard GitHub integration is intentionally NOT used.
+project_id = "phaedra"
+
+[auth]
+# Accounts are provisioned in the dashboard (you + one more). Public signup is off.
+enable_signup = false
+enable_confirmations = false
+
+[functions.save-post]
+verify_jwt = true
+
+[functions.delete-post]
+verify_jwt = true
