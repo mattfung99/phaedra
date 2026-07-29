@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mattfung99.github.io/phaedra/sitemap.xml
