@@ -6,6 +6,9 @@ project_id = "phaedra"
 [auth]
 # Accounts are provisioned in the dashboard (you + one more). Public signup is off.
 enable_signup = false
+
+[auth.email]
+# enable_confirmations lives under [auth.email] in the current CLI schema.
 enable_confirmations = false
 
 [functions.save-post]
