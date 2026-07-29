@@ -1,74 +1,85 @@
 # Phaedra
 
-A personal blog. Static frontend on **GitHub Pages**, backed by **Supabase**
-(Postgres + Auth + Storage). No server to run — Supabase is the backend, and the
-public site is pre-rendered to static HTML for SEO.
+My personal blog. It's a static site on GitHub Pages with Supabase doing the
+backend work (Postgres, Auth, and Storage), so there's no server to babysit. The
+public pages get pre-rendered to plain HTML at build time, which keeps them fast
+and lets search engines actually read them.
 
-## Stack
+## What it's built with
 
-- **Vite + React 19 + TypeScript**, Tailwind v4 + **shadcn/ui**
-- **vite-react-ssg** — public pages (`/`, `/blog`, `/blog/:slug`, `/about`,
-  `/contact`) are pre-rendered at build with baked-in `<head>` meta + JSON-LD.
-  Admin is client-only behind an auth guard.
-- **TanStack Query** for admin data; **TipTap** editor
-- **Supabase**: single `posts` table with RLS, Auth (email/password, signup off),
-  Storage (`post-images`). Writes go through Edge Functions (`save-post`,
-  `delete-post`) that sanitize content server-side; RLS forbids direct client writes.
+- Vite, React 19, and TypeScript, styled with Tailwind v4 and shadcn/ui
+- vite-react-ssg pre-renders the public pages (`/`, `/blog`, `/blog/:slug`,
+  `/about`, `/contact`) with real `<head>` tags and JSON-LD baked in. The admin
+  area is client-only and sits behind an auth guard.
+- TanStack Query on the admin side, with a TipTap editor for writing posts
+- Supabase holds a single `posts` table protected by row-level security. Auth is
+  email and password with signups turned off, and cover images live in a
+  `post-images` bucket. Every write goes through an Edge Function (`save-post` and
+  `delete-post`) that sanitizes the HTML on the server, and RLS stops the client
+  from writing directly. There's no way to sneak unsanitized content in.
 
-## Local development
+## Running it locally
 
-**One command (recommended)** — boots a local Supabase stack, wires its
-credentials into `.env.development.local`, seeds a dev admin + sample posts, and
-starts Vite. Requires **Docker** + the **Supabase CLI**
-(`brew install supabase/tap/supabase`):
+The easy way is one command. It spins up a local Supabase stack, points the dev
+server at it, seeds an admin login plus a few sample posts, and starts Vite. You
+need Docker running and the Supabase CLI installed
+(`brew install supabase/tap/supabase`).
 
 ```bash
 npm install
-npm run dev:local        # → admin@example.com / password123, Studio :54323
-npm run stop:local       # tear down the Supabase stack
+npm run dev:local
 ```
 
-**Against your real project (or no backend):**
+That logs you in as `admin@example.com` with the password `password123`, and
+Supabase Studio is at http://127.0.0.1:54323. When you're done, `npm run stop:local`
+shuts the stack down.
+
+If you'd rather point at your real project, or run with no backend at all, copy the
+example env file and start the normal dev server.
 
 ```bash
-cp .env.example .env.local   # fill in your Supabase URL + anon key
+cp .env.example .env.local
 npm install
 npm run dev
 ```
 
-Without any Supabase config the app still runs — data calls short-circuit to empty.
-`dev:local` writes to `.env.development.local` (dev-only), so it never clobbers the
-prod `.env.local` your builds use.
+The app still runs without any Supabase config. The data calls just come back
+empty. And you don't have to worry about the two getting crossed. `dev:local`
+writes to `.env.development.local`, which only applies in dev, so it never touches
+the `.env.local` your production builds use.
 
-CI's `e2e` job stands up the same local stack on every PR (seeds admin + posts,
-runs the full Playwright suite), so nothing in CI touches production.
+The CI e2e job stands up the exact same local stack on every pull request and runs
+the full Playwright suite against it, so nothing in CI ever touches production.
 
-### Scripts
+### The scripts
 
-| Script                    | What                             |
-| ------------------------- | -------------------------------- |
-| `npm run dev`             | Vite dev server                  |
-| `npm run dev:local`       | Local Supabase + seed + Vite     |
-| `npm run stop:local`      | Stop the local Supabase stack    |
-| `npm run build`           | Typecheck + SSG build to `dist/` |
-| `npm run preview`         | Serve the built site             |
-| `npm run lint` / `format` | oxlint / prettier                |
-| `npm test` / `test:e2e`   | Vitest unit / Playwright e2e     |
+| Script                    | What it does                       |
+| ------------------------- | ---------------------------------- |
+| `npm run dev`             | Vite dev server                    |
+| `npm run dev:local`       | Local Supabase, seed, then Vite    |
+| `npm run stop:local`      | Stop the local Supabase stack      |
+| `npm run build`           | Typecheck and SSG build to `dist/` |
+| `npm run preview`         | Serve the built site               |
+| `npm run lint` / `format` | oxlint / prettier                  |
+| `npm test` / `test:e2e`   | Vitest unit / Playwright e2e       |
 
-## Supabase setup (one-time, dashboard)
+## Setting up Supabase
 
-1. Create a project; copy the URL, anon key, and service_role key.
-2. Apply the schema: `supabase link --project-ref <ref>` then `supabase db push`
-   (or via the `migrations.yml` workflow).
-3. Deploy functions: `supabase functions deploy save-post delete-post`.
-4. Provision admin accounts (Authentication → Users). Public signup is disabled.
-   Optionally set `author_name` in a user's metadata for the byline.
-5. Put `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` in `.env.local`, and the CI
-   secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE`,
-   `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`).
+You only do this once, in the dashboard.
 
-## Deploy
+1. Create a project and grab the URL, anon key, and service_role key.
+2. Apply the schema with `supabase link --project-ref <ref>` then
+   `supabase db push`, or just let the `migrations.yml` workflow do it.
+3. Deploy the functions with `supabase functions deploy save-post delete-post`.
+4. Add your admin accounts under Authentication, then Users. Public signup is off,
+   so nobody else can register. If you want a nice byline, set `author_name` in the
+   user's metadata.
+5. Drop `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` into `.env.local`, and add
+   the CI secrets: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE`,
+   `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, and `SUPABASE_DB_PASSWORD`.
 
-GitHub Actions builds the SSG output and deploys to GitHub Pages (Pages source =
-"GitHub Actions"). `base` in `vite.config.ts` is `/phaedra/` — change it if the
-repo is renamed or a custom domain is added.
+## Deploying
+
+GitHub Actions builds the site and ships it to GitHub Pages. Set the Pages source
+to "GitHub Actions" and you're done. One thing to know: `base` in `vite.config.ts`
+is `/phaedra/`, so change it if you rename the repo or move to a custom domain.
