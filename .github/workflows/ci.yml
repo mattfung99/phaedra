@@ -8,7 +8,6 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    environment: staging
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,8 +21,10 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Placeholder — verify only needs the build to compile; real data flow is
+          # exercised in the e2e job against local Supabase.
+          VITE_SUPABASE_URL: https://placeholder.supabase.co
+          VITE_SUPABASE_ANON_KEY: placeholder
 
   # Deno-runtime tests for the Edge Functions (e.g. the content sanitizer).
   edge-functions:

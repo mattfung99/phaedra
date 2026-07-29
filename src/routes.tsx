@@ -28,8 +28,12 @@ export const routes: RouteRecord[] = [
         path: 'blog/:slug',
         Component: Post,
         loader: postLoader,
-        // Enumerate published slugs at build so each post gets its own static page.
-        getStaticPaths: fetchPublishedSlugs,
+        // Enumerate published post paths at build so each gets its own static page.
+        // vite-react-ssg joins each returned value with the PARENT prefix (not the
+        // route's own path), so we must return the full `blog/<slug>` path — bare
+        // slugs would render at /<slug> instead of /blog/<slug>.
+        getStaticPaths: async () =>
+          (await fetchPublishedSlugs()).map((slug) => `blog/${slug}`),
       },
       { path: 'about', Component: About },
       { path: 'contact', Component: Contact },
