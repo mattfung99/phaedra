@@ -61,8 +61,11 @@ run('node scripts/seed-e2e-user.mjs', {
 })
 console.log(`▶ Dev admin login: ${DEV_EMAIL} / ${DEV_PASSWORD}`)
 console.log(
-  '  Supabase Studio: http://127.0.0.1:54323  ·  stop with: npm run stop:local\n',
+  '  Supabase Studio: http://127.0.0.1:54323  ·  stop with: yarn stop:local\n',
 )
 
 // 5. Start Vite (inherits stdio; Ctrl-C stops dev, Supabase keeps running).
-spawn('npm', ['run', 'dev'], { stdio: 'inherit' })
+spawn('yarn', ['dev'], {
+  stdio: 'inherit',
+  shell: process.platform === 'win32',
+})

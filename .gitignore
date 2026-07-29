@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Yarn (Berry, node-modules linker) — keep yarn.lock, ignore the cache/state
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # Test / build artifacts
 coverage
 playwright-report

@@ -20,18 +20,20 @@ and lets search engines actually read them.
 
 ## Running it locally
 
+This project uses Yarn 4 (through corepack). Turn it on once with `corepack enable`.
+
 The easy way is one command. It spins up a local Supabase stack, points the dev
 server at it, seeds an admin login plus a few sample posts, and starts Vite. You
 need Docker running and the Supabase CLI installed
 (`brew install supabase/tap/supabase`).
 
 ```bash
-npm install
-npm run dev:local
+yarn install
+yarn dev:local
 ```
 
 That logs you in as `admin@example.com` with the password `password123`, and
-Supabase Studio is at http://127.0.0.1:54323. When you're done, `npm run stop:local`
+Supabase Studio is at http://127.0.0.1:54323. When you're done, `yarn stop:local`
 shuts the stack down.
 
 If you'd rather point at your real project, or run with no backend at all, copy the
@@ -39,8 +41,8 @@ example env file and start the normal dev server.
 
 ```bash
 cp .env.example .env.local
-npm install
-npm run dev
+yarn install
+yarn dev
 ```
 
 The app still runs without any Supabase config. The data calls just come back
@@ -53,15 +55,15 @@ the full Playwright suite against it, so nothing in CI ever touches production.
 
 ### The scripts
 
-| Script                    | What it does                       |
-| ------------------------- | ---------------------------------- |
-| `npm run dev`             | Vite dev server                    |
-| `npm run dev:local`       | Local Supabase, seed, then Vite    |
-| `npm run stop:local`      | Stop the local Supabase stack      |
-| `npm run build`           | Typecheck and SSG build to `dist/` |
-| `npm run preview`         | Serve the built site               |
-| `npm run lint` / `format` | oxlint / prettier                  |
-| `npm test` / `test:e2e`   | Vitest unit / Playwright e2e       |
+| Script                   | What it does                       |
+| ------------------------ | ---------------------------------- |
+| `yarn dev`               | Vite dev server                    |
+| `yarn dev:local`         | Local Supabase, seed, then Vite    |
+| `yarn stop:local`        | Stop the local Supabase stack      |
+| `yarn build`             | Typecheck and SSG build to `dist/` |
+| `yarn preview`           | Serve the built site               |
+| `yarn lint` / `format`   | oxlint / prettier                  |
+| `yarn test` / `test:e2e` | Vitest unit / Playwright e2e       |
 
 ## Setting up Supabase
 
